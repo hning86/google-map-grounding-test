@@ -169,7 +169,7 @@ The compiler aggregates and calculates three primary performance and validation 
 
 ### 1. ⏱️ Average Latency (seconds)
 Measures the average duration (in seconds) from the time the client fires the Vertex AI request to the receipt of the fully parsed structured content:
-$$\text{Average Latency} = \frac{1}{N}\sum_{i=1}^{N}(\text{timestamp}_{\text{end}} - \text{timestamp}_{\text{start}})$$
+$$\text{Average Latency} = \frac{1}{N}\sum_{i=1}^{N}(t_{\text{end}} - t_{\text{start}})$$
 *(Lower is better)*
 
 ---
@@ -178,7 +178,7 @@ $$\text{Average Latency} = \frac{1}{N}\sum_{i=1}^{N}(\text{timestamp}_{\text{end
 The probability that a successful response contains verifiable search citations from the Google Maps grounding tool. It tracks whether the model successfully queried and retrieved mapping features for the requested points of interest.
 
 #### Math:
-$$\text{Grounded Rate} = \frac{\sum_{i=1}^{N} \mathbb{I}(\text{count}(\text{grounding\_chunks}_i) > 0)}{N_{\text{success}}}$$
+$$\text{Grounded Rate} = \frac{\sum_{i=1}^{N} \mathbb{I}(\text{count}(\text{grounding-chunks}_i) > 0)}{N_{\text{success}}}$$
 
 *Where:*
 *   $N_{\text{success}}$ is the total count of successful generation attempts.
@@ -201,16 +201,16 @@ Measures the structural alignment and validity of the generated points of intere
 Requires an exact normalized string match (ignoring casing and leading/trailing whitespaces) between the generated place title and the grounding chunk titles.
 
 *   **Math:**
-    $$\text{Strict Mismatch Rate}_{\text{record}} = \frac{\text{Count of generated places } p \text{ where } \text{normalize}(p_{\text{title}}) \notin \mathcal{G}}{\text{Total generated places in response}}$$
+    $$\text{Strict Mismatch Rate} = \frac{\text{Count of generated places } p \text{ where } \text{normalize}(p_{\text{title}}) \notin \mathcal{G}}{\text{Total generated places in response}}$$
     *Where:*
-    *   $\mathcal{G} = \{ \text{normalize}(c_{\text{title}}) \mid c \in \text{grounding\_chunks} \}$
+    *   $\mathcal{G} = \{ \text{normalize}(c_{\text{title}}) \mid c \in \text{grounding-chunks} \}$
     *   $\text{normalize}(t)$ lowercases and strips whitespace.
 
 #### B. Fuzzy Mismatch Rate (Levenshtein Distance Match)
 Allows minor differences in punctuation, accents, suffixes, or spacing. It uses Levenshtein edit distance to calculate the Token Sort Ratio similarity between titles and counts as a match if the similarity is $\ge 85\%$.
 
 *   **Math:**
-    $$\text{Fuzzy Mismatch Rate}_{\text{record}} = \frac{\text{Count of generated places } p \text{ where } \max_{c \in \text{grounding\_chunks}} (\text{similarity}(p_{\text{title}}, c_{\text{title}})) < 85\%}{\text{Total generated places in response}}$$
+    $$\text{Fuzzy Mismatch Rate} = \frac{\text{Count of generated places } p \text{ where } \max_{c \in \text{grounding-chunks}} (\text{similarity}(p_{\text{title}}, c_{\text{title}})) < 85\%}{\text{Total generated places in response}}$$
 
 #### Python Logic:
 ```python
