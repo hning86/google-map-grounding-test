@@ -330,3 +330,30 @@ The pipeline introduces a critical tradeoff between **latency** and **precision*
 * **Sequential Overhead:** Executing two sequential API calls (Searcher $\rightarrow$ Parser) and waiting for active Google Maps search results significantly increases individual request latency (e.g., from **6.79s** to **27.99s** at `low` effort).
 * **Recommendation:** For fast-turnaround UX, the 1-step baseline model is preferred, but for tasks requiring strict real-world factuality and verification, the 2-stage pipeline is mandatory.
 
+---
+
+## 🧪 Side-Experiment 2: The Impact of Schema Enforcement on Multi-Model Latency & Grounding
+
+To understand whether API-level JSON schema constraints impact other models (like `gemini-3-flash-preview` and `gemini-3.1-pro-preview`), we introduced a `--no-schema` flag to bypass schema validation completely (allowing freeform Markdown output) and ran a comprehensive benchmark experiment (90 total calls).
+
+### 1. Empirical Findings (Schema vs. NO Schema)
+
+| Model & Setup | Effort | Grounded Rate (With Schema) | Grounded Rate (NO Schema) | Avg Latency (With Schema) | Avg Latency (NO Schema) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **gemini-3-flash-preview** | `low` | 98.89% | **100.00%** | **20.33s** | 36.68s |
+| **gemini-3-flash-preview** | `medium` | 100.00% | **100.00%** | **26.50s** | 29.18s |
+| **gemini-3-flash-preview** | `high` | 100.00% | **100.00%** | **29.15s** | 34.33s |
+| **gemini-3.1-pro-preview** | `low` | 98.89% | **100.00%** | **18.73s** | 20.38s |
+| **gemini-3.1-pro-preview** | `medium` | 100.00% | **100.00%** | **25.41s** | 25.42s |
+| **gemini-3.1-pro-preview** | `high` | 100.00% | **100.00%** | 42.17s | **40.00s** |
+| **gemini-3.5-flash** | `low` | 4.44% | **90.00%** | **6.79s** | 9.53s |
+| **gemini-3.5-flash** | `medium` | 18.89% | **100.00%** | **12.40s** | 14.20s |
+| **gemini-3.5-flash** | `high` | 11.11% | **60.00%** | **26.75s** | 27.69s |
+
+### 2. Key Latency & Grounding Insights
+
+* **External Tool Calls Drive Latency:** Disabling JSON Schema enforcement did not yield latency reductions for high-end models (`gemini-3.1-pro-preview` and `gemini-3-flash-preview`). This proves that the API's Structured Outputs constraint-satisfaction decoding engine adds very minimal overhead. The primary latency driver is the network I/O and server-side query-processing required to run live Google Maps searches.
+* **Why `gemini-3.5-flash` Latency Increases:** Removing schema constraints forces `gemini-3.5-flash` to stop bypassing the Google Maps tool. As its Grounded Rate surges from **4.4% $\rightarrow$ 90.00%**, it has to actually execute the searches and wait for results, causing its average latency to naturally rise (e.g., from `6.79s` to `9.53s` at low effort).
+* **Formatting Tradeoffs:** Disabling schema enforcement produces freeform Markdown instead of structured JSON. Any downstream parser must handle syntax irregularities, making API-enforced schemas essential for strict production parsing on high-end models where they carry no latency penalty.
+
+
