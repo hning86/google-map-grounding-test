@@ -108,7 +108,7 @@ def save_as_pretty_json(jsonl_file):
         json.dump(records, f, indent=2, ensure_ascii=False)
     print(f"Pretty-printed results successfully saved to {pretty_json_file}")
 
-def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipeline=False, workers=5):
+def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipeline=False, workers=5, no_schema=False):
     client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
     
     total_calls = len(models) * len(efforts) * len(queries) * repetitions
@@ -194,15 +194,24 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                     
                 else:
                     # --- BASELINE: 1-STEP DIRECT GENERATION ---
-                    config = types.GenerateContentConfig(
-                        tools=[types.Tool(google_maps=types.GoogleMaps())],
-                        thinking_config=types.ThinkingConfig(
-                            thinking_level=effort.upper()
-                        ),
-                        system_instruction=SYSTEM_INSTRUCTION_SINGLE_STEP,
-                        response_mime_type="application/json",
-                        response_schema=SCHEMA
-                    )
+                    if no_schema:
+                        config = types.GenerateContentConfig(
+                            tools=[types.Tool(google_maps=types.GoogleMaps())],
+                            thinking_config=types.ThinkingConfig(
+                                thinking_level=effort.upper()
+                            ),
+                            system_instruction=SYSTEM_INSTRUCTION_SINGLE_STEP
+                        )
+                    else:
+                        config = types.GenerateContentConfig(
+                            tools=[types.Tool(google_maps=types.GoogleMaps())],
+                            thinking_config=types.ThinkingConfig(
+                                thinking_level=effort.upper()
+                            ),
+                            system_instruction=SYSTEM_INSTRUCTION_SINGLE_STEP,
+                            response_mime_type="application/json",
+                            response_schema=SCHEMA
+                        )
                     
                     start_time = time.time()
                     response = client.models.generate_content(
@@ -255,20 +264,29 @@ if __name__ == "__main__":
     parser.add_argument("--quick", action="store_true", help="Shortcut to run a fast dry-run with 1 repetition.")
     parser.add_argument("--pipeline", action="store_true", help="Enable two-step agentic pipeline (Searcher + Schema Parser).")
     parser.add_argument("--workers", "-w", type=int, default=5, help="Number of concurrent workers for parallel execution.")
+    parser.add_argument("--no-schema", action="store_true", help="Disable API-level JSON Schema enforcement (freeform markdown).")
     
     args = parser.parse_args()
     
     if args.quick:
-        output_file = args.output or (os.path.join("result", "pipeline_quick_results.jsonl") if args.pipeline else os.path.join("result", "quick_test_results.jsonl"))
+        default_name = "pipeline_quick_results.jsonl" if args.pipeline else "quick_test_results.jsonl"
+        if args.no_schema:
+            base, ext = os.path.splitext(default_name)
+            default_name = base + "_no_schema" + ext
+        output_file = args.output or os.path.join("result", default_name)
         repetitions = 1
         eval_models = ["gemini-3.5-flash"]
         eval_efforts = ["low"]
         eval_queries = [QUERIES[0]]
     else:
-        output_file = args.output or (os.path.join("result", "pipeline_eval_results.jsonl") if args.pipeline else os.path.join("result", "full_eval_results.jsonl"))
+        default_name = "pipeline_eval_results.jsonl" if args.pipeline else "full_eval_results.jsonl"
+        if args.no_schema:
+            base, ext = os.path.splitext(default_name)
+            default_name = base + "_no_schema" + ext
+        output_file = args.output or os.path.join("result", default_name)
         repetitions = args.repetitions or 18
         eval_models = MODELS
         eval_efforts = EFFORTS
         eval_queries = QUERIES
         
-    run_evaluation(output_file, repetitions, eval_models, eval_efforts, eval_queries, use_pipeline=args.pipeline, workers=args.workers)
+    run_evaluation(output_file, repetitions, eval_models, eval_efforts, eval_queries, use_pipeline=args.pipeline, workers=args.workers, no_schema=args.no_schema)
