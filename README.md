@@ -356,4 +356,28 @@ To understand whether API-level JSON schema constraints impact other models (lik
 * **Why `gemini-3.5-flash` Latency Increases:** Removing schema constraints forces `gemini-3.5-flash` to stop bypassing the Google Maps tool. As its Grounded Rate surges from **4.4% $\rightarrow$ 90.00%**, it has to actually execute the searches and wait for results, causing its average latency to naturally rise (e.g., from `6.79s` to `9.53s` at low effort).
 * **Formatting Tradeoffs:** Disabling schema enforcement produces freeform Markdown instead of structured JSON. Any downstream parser must handle syntax irregularities, making API-enforced schemas essential for strict production parsing on high-end models where they carry no latency penalty.
 
+---
+
+## 🏁 Overall Conclusion & Architectural Recommendations
+
+Through our extensive evaluations—spanning **810 standard runs**, a **75-run 2-Stage Pipeline side-experiment**, and a **90-run Unconstrained (`--no-schema`) side-experiment**—we have mapped out the exact operational profiles of the Gemini models on grounded POI discovery tasks.
+
+### 📌 Summary of Core Findings
+
+1. **Structured Outputs Cognitive Load:** Enforcing strict JSON schema constraints at the API level (Structured Outputs) alongside multi-step tool execution causes a major cognitive bottleneck in lightweight models like `gemini-3.5-flash`. It prioritizes formatting compliance and response speed over tool usage, leading to **near-zero grounding rates** and **~96% hallucination/mismatch rates** in standard baselines.
+2. **The Unconstrained Unblocking Effect:** Decoupling the task (via a 2-stage pipeline) or removing API-level schema constraints completely unblocks `gemini-3.5-flash`, causing its **grounding rate to surge to 90-100%** and its **mismatch rate to drop to a stellar 12.6%**.
+3. **Network I/O Dominates Latency:** For highly robust models (`gemini-3.1-pro-preview` and `gemini-3-flash-preview`), schema enforcement carries **zero latency penalty**. The primary driver of latency in grounded applications is the physical time taken to query, process, and return external API results (in this case, Google Maps).
+
+---
+
+### 🛠️ Production Recommendations Matrix
+
+| Model | Use Case | Recommended Architecture | Rationale |
+| :--- | :--- | :--- | :--- |
+| **`gemini-3.1-pro-preview`** | **Mission-Critical Accuracy** | **1-Step Direct (With Schema)** | Delivers near-perfect factual grounding precision (~1.1% mismatch) with built-in schema guarantees. Highly capable of concurrent tool-and-schema processing without any latency penalty. |
+| **`gemini-3-flash-preview`** | **Standard Enterprise Apps** | **1-Step Direct (With Schema)** | Yields a robust, well-balanced combination of 99% grounding rate and reasonable latency (~20s) with full schema enforcement. |
+| **`gemini-3.5-flash`** | **Factual but Cost-Effective** | **2-Stage Pipeline (Search $\rightarrow$ Parse)** | Bypassing schema constraints on the initial search call unblocks active tool-use (raising grounded rate to 100% and lowering mismatch to 12.6%). A secondary lightweight pass structures the output into JSON. |
+| **`gemini-3.5-flash`** | **Ultra-Low Latency UX** | **1-Step Direct (NO Grounding)** | If real-time interaction is more critical than live factual verification, use the baseline 1-step direct configuration without grounding tools to achieve fast ~6s turnarounds. |
+
+
 
