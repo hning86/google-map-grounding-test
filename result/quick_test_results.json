@@ -1,0 +1,57 @@
+[
+  {
+    "model": "gemini-3.5-flash",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1779886476.168121,
+    "success": true,
+    "pipeline": false,
+    "latency": 10.612163066864014,
+    "response_text": {
+      "places": [
+        {
+          "title": "Dong Xuan Alley",
+          "rating": "4.4",
+          "review_count": "9",
+          "text": "Located right next to Dong Xuan Market, Dong Xuan Alley (Ngõ Đồng Xuân) is a legendary narrow lane dedicated entirely to local food. It is packed with tiny food stalls selling local Hanoi delicacies such as bun cha, bun oc (snail noodle soup), banh tom (shrimp cakes), and sweet che dessert soups at incredibly affordable prices.",
+          "place_type": "Food Court / Alley",
+          "opening_hours": "Typically active during the daytime",
+          "entry_price": "Free admission",
+          "address": "Ng. Đồng Xuân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.4",
+          "review_count": "16650",
+          "text": "One of the most famous street food spots in the Hanoi Old Quarter, Banh Mi 25 offers a large menu of traditional and modern Vietnamese sandwiches with a simple seating area across the road. Known for crispy baguettes filled with flavorful pate, pork, chicken, or vegetarian options.",
+          "place_type": "Sandwich Shop",
+          "opening_hours": "Monday - Sunday: 7:00 AM – 9:00 PM",
+          "entry_price": "Free admission",
+          "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "Ta Hien Beer Street",
+          "rating": "4.3",
+          "review_count": "10070",
+          "text": "Known as the ultimate nightlife hub in the Old Quarter, Ta Hien Beer Street is packed with low plastic stools where locals and tourists gather. Along with cheap draught beer (bia hoi), the surrounding vendors serve popular street food snacks such as grilled pork skewers, fried cheese sticks, and lemongrass chicken feet.",
+          "place_type": "Tourist Attraction / Street Food Hub",
+          "opening_hours": "Friday - Sunday: 7:00 PM – 11:00 PM (Most active during weekends)",
+          "entry_price": "Free admission",
+          "address": "41-36 P. Lương Ngọc Quyến, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Hanoi Weekend Night Market Start Point",
+          "rating": "4.3",
+          "review_count": "129",
+          "text": "Beginning at Hang Dao Street, the Weekend Night Market is a bustling, pedestrian-only market that stretches across several blocks in the Old Quarter. While there are plenty of cheap souvenirs, the side alleys and food stalls offer a feast of grilled meats, tater tots, sausages, and traditional Vietnamese street snacks.",
+          "place_type": "Night Market",
+          "opening_hours": "Friday - Sunday: 6:00 PM – 11:00 PM",
+          "entry_price": "Free admission",
+          "address": "104 P. Hàng Đào, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": []
+  }
+]

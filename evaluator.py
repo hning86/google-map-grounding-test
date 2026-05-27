@@ -1,0 +1,274 @@
+import time
+import json
+import os
+import threading
+from concurrent.futures import ThreadPoolExecutor
+import pandas as pd
+from tqdm import tqdm
+from google import genai
+from google.genai import types
+
+# Configuration (Global settings)
+MODELS = ["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash"]
+EFFORTS = ["low", "medium", "high"]
+QUERIES = [
+    "Best street food spots and street food markets in Hanoi",
+    "Best vegan restaurants in Berlin",
+    "Top art museums and galleries in Paris",
+    "Hidden specialty coffee shops in Tokyo",
+    "Best rooftop bars with a view in Bangkok"
+]
+PROJECT_ID = "ninghai-ccai"
+LOCATION = "global"
+
+# Schema definition for controlled generation
+SCHEMA = {
+    "type": "object",
+    "properties": {
+        "places": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "title":          {"type": "string"},
+                    "rating":         {"type": "string"},
+                    "review_count":   {"type": "string"},
+                    "text":           {"type": "string"},
+                    "place_type":     {"type": "string"},
+                    "opening_hours":  {"type": "string"},
+                    "entry_price":    {"type": "string"},
+                    "address":        {"type": "string"}
+                },
+                "required": ["title", "rating", "review_count", "text"],
+                "additionalProperties": False
+            }
+        }
+    },
+    "required": ["places"],
+    "additionalProperties": False
+}
+
+# Strategy 1: Strict Grounding System Instruction (Searcher Agent)
+SYSTEM_INSTRUCTION_SEARCHER = """
+You are a strict Point-of-Interest discovering and verifying agent. 
+Your parametric memory and training data regarding candidate places, addresses, ratings, and opening hours are considered OUTDATED and STALE.
+
+CRITICAL RULES:
+1. You are FORBIDDEN from listing any place purely from your training data.
+2. For every candidate place, you MUST execute a Google Maps search query to verify its current existence and retrieve active details.
+3. If the Google Maps grounding search does not return a location, you MUST NOT include it in your output list.
+4. You must output a clean markdown list of verified places with their verified ratings, review counts, place type, opening hours, entry price, address, and a short description.
+"""
+
+# Schema Parser System Instruction (Parser Agent)
+SYSTEM_INSTRUCTION_PARSER = """
+You are a strict JSON formatting parser.
+Your only job is to take the unstructured input text containing a list of places and extract them into a clean JSON object matching the requested schema.
+Do not add, invent, or modify any factual details from the input.
+"""
+
+# Optimized Single-Step Grounding System Instruction (Forces maps tool in single JSON schema call)
+SYSTEM_INSTRUCTION_SINGLE_STEP = """
+You are a strict Point-of-Interest discovering and verifying agent.
+Your parametric memory and training data regarding candidate places, addresses, ratings, and opening hours are considered OUTDATED and STALE.
+
+CRITICAL RULES:
+1. You are FORBIDDEN from listing any place purely from your training data.
+2. For every candidate place, you MUST execute a Google Maps search query to verify its current existence and retrieve active details.
+3. If the Google Maps grounding search does not return a location, you MUST NOT include it in your output.
+4. All ratings, review counts, and addresses in your final JSON response must match the Google Maps grounding results exactly.
+"""
+
+def save_as_pretty_json(jsonl_file):
+    base, ext = os.path.splitext(jsonl_file)
+    pretty_json_file = base + ".json"
+    
+    if not os.path.exists(jsonl_file):
+        return
+        
+    records = []
+    with open(jsonl_file, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+                # Decode response_text to a nested JSON object if it's an escaped string
+                if "response_text" in record and isinstance(record["response_text"], str):
+                    try:
+                        record["response_text"] = json.loads(record["response_text"])
+                    except json.JSONDecodeError:
+                        pass
+                records.append(record)
+            except json.JSONDecodeError:
+                pass
+                
+    with open(pretty_json_file, "w") as f:
+        json.dump(records, f, indent=2, ensure_ascii=False)
+    print(f"Pretty-printed results successfully saved to {pretty_json_file}")
+
+def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipeline=False, workers=5):
+    client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+    
+    total_calls = len(models) * len(efforts) * len(queries) * repetitions
+    mode_str = "Pipeline (2-Step)" if use_pipeline else "Baseline (1-Step)"
+    print(f"Starting evaluation [{mode_str}]: {total_calls} total API calls ({repetitions} repetitions per configuration) with {workers} parallel workers")
+    
+    tasks = []
+    for model in models:
+        for effort in efforts:
+            for query in queries:
+                for i in range(repetitions):
+                    tasks.append((model, effort, query, i))
+                    
+    pbar = tqdm(total=total_calls)
+    lock = threading.Lock()
+    
+    # Open file in write mode to overwrite previous results
+    if os.path.dirname(output_file):
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    with open(output_file, "w") as f:
+        def worker(task):
+            model, effort, query, i = task
+            record = {
+                "model": model,
+                "effort": effort,
+                "query": query,
+                "iteration": i,
+                "timestamp": time.time(),
+                "success": False,
+                "pipeline": use_pipeline
+            }
+            
+            try:
+                if use_pipeline:
+                    # --- STEP 1: SEARCHER AGENT ---
+                    config_searcher = types.GenerateContentConfig(
+                        tools=[types.Tool(google_maps=types.GoogleMaps())],
+                        thinking_config=types.ThinkingConfig(
+                            thinking_level=effort.upper()
+                        ),
+                        system_instruction=SYSTEM_INSTRUCTION_SEARCHER
+                    )
+                    
+                    start_time = time.time()
+                    response_searcher = client.models.generate_content(
+                        model=model,
+                        contents=query,
+                        config=config_searcher
+                    )
+                    latency_searcher = time.time() - start_time
+                    
+                    # --- STEP 2: PARSER AGENT ---
+                    # Use gemini-3.5-flash to parse and structure Step 1 results rapidly
+                    config_parser = types.GenerateContentConfig(
+                        system_instruction=SYSTEM_INSTRUCTION_PARSER,
+                        response_mime_type="application/json",
+                        response_schema=SCHEMA
+                    )
+                    
+                    start_parser = time.time()
+                    response_parser = client.models.generate_content(
+                        model="gemini-3.5-flash",
+                        contents=response_searcher.text,
+                        config=config_parser
+                    )
+                    latency_parser = time.time() - start_parser
+                    
+                    record["latency"] = latency_searcher + latency_parser
+                    record["response_text"] = response_parser.text
+                    
+                    # Extract grounding chunks from Step 1 response metadata
+                    grounding_chunks = []
+                    if response_searcher.candidates and response_searcher.candidates[0].grounding_metadata:
+                        metadata = response_searcher.candidates[0].grounding_metadata
+                        if metadata.grounding_chunks:
+                            for chunk in metadata.grounding_chunks:
+                                if chunk.maps:
+                                    grounding_chunks.append({
+                                        "title": chunk.maps.title
+                                    })
+                    record["grounding_chunks"] = grounding_chunks
+                    record["success"] = True
+                    
+                else:
+                    # --- BASELINE: 1-STEP DIRECT GENERATION ---
+                    config = types.GenerateContentConfig(
+                        tools=[types.Tool(google_maps=types.GoogleMaps())],
+                        thinking_config=types.ThinkingConfig(
+                            thinking_level=effort.upper()
+                        ),
+                        system_instruction=SYSTEM_INSTRUCTION_SINGLE_STEP,
+                        response_mime_type="application/json",
+                        response_schema=SCHEMA
+                    )
+                    
+                    start_time = time.time()
+                    response = client.models.generate_content(
+                        model=model,
+                        contents=query,
+                        config=config
+                    )
+                    end_time = time.time()
+                    
+                    record["latency"] = end_time - start_time
+                    record["response_text"] = response.text
+                    
+                    grounding_chunks = []
+                    if response.candidates and response.candidates[0].grounding_metadata:
+                        metadata = response.candidates[0].grounding_metadata
+                        if metadata.grounding_chunks:
+                            for chunk in metadata.grounding_chunks:
+                                if chunk.maps:
+                                    grounding_chunks.append({
+                                        "title": chunk.maps.title
+                                    })
+                    record["grounding_chunks"] = grounding_chunks
+                    record["success"] = True
+                    
+            except Exception as e:
+                record["error"] = str(e)
+                # Exponential backoff on error
+                time.sleep(2)
+            
+            with lock:
+                f.write(json.dumps(record) + "\n")
+                f.flush()
+                pbar.update(1)
+            
+            # Small delay to respect rate limits
+            time.sleep(0.5)
+            
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            executor.map(worker, tasks)
+
+    pbar.close()
+    print(f"Evaluation complete. Results saved to {output_file}")
+    save_as_pretty_json(output_file)
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Run Gemini POI Discovery benchmarks with Google Maps grounding.")
+    parser.add_argument("--output", type=str, help="Path to save the output JSONL raw results file.")
+    parser.add_argument("--repetitions", "-r", type=int, help="Number of repetitions per model/effort combination.")
+    parser.add_argument("--quick", action="store_true", help="Shortcut to run a fast dry-run with 1 repetition.")
+    parser.add_argument("--pipeline", action="store_true", help="Enable two-step agentic pipeline (Searcher + Schema Parser).")
+    parser.add_argument("--workers", "-w", type=int, default=5, help="Number of concurrent workers for parallel execution.")
+    
+    args = parser.parse_args()
+    
+    if args.quick:
+        output_file = args.output or (os.path.join("result", "pipeline_quick_results.jsonl") if args.pipeline else os.path.join("result", "quick_test_results.jsonl"))
+        repetitions = 1
+        eval_models = ["gemini-3.5-flash"]
+        eval_efforts = ["low"]
+        eval_queries = [QUERIES[0]]
+    else:
+        output_file = args.output or (os.path.join("result", "pipeline_eval_results.jsonl") if args.pipeline else os.path.join("result", "full_eval_results.jsonl"))
+        repetitions = args.repetitions or 18
+        eval_models = MODELS
+        eval_efforts = EFFORTS
+        eval_queries = QUERIES
+        
+    run_evaluation(output_file, repetitions, eval_models, eval_efforts, eval_queries, use_pipeline=args.pipeline, workers=args.workers)

@@ -1,0 +1,17 @@
+[project]
+name = "gemini-eval"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "google-cloud-aiplatform>=1.153.1",
+    "pandas>=3.0.3",
+    "pyopenssl>=26.2.0",
+    "rapidfuzz>=3.14.5",
+    "tabulate>=0.10.0",
+    "tqdm>=4.67.3",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
