@@ -9,7 +9,7 @@ from google import genai
 from google.genai import types
 
 # Configuration (Global settings)
-MODELS = ["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash"]
+MODELS = ["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite"]
 EFFORTS = ["low", "medium", "high"]
 QUERIES = [
     "Best street food spots and street food markets in Hanoi",
