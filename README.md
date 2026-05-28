@@ -1,6 +1,6 @@
 # 🧭 Gemini with Google Map Grounding Evaluation
 
-A robust, lightweight benchmark and evaluation framework designed to assess and compare Gemini models (e.g., `gemini-3-flash-preview`, `gemini-3.1-pro-preview`, and `gemini-3.5-flash`) on Point-of-Interest (POI) discovery tasks using [Google Map Grounding Tool](https://ai.google.dev/gemini-api/docs/maps-grounding). 
+A robust, lightweight benchmark and evaluation framework designed to assess and compare Gemini models (e.g., `gemini-3-flash-preview`, `gemini-3.1-pro-preview`, `gemini-3.5-flash`, and `gemini-3.1-flash-lite`) on Point-of-Interest (POI) discovery tasks using [Google Map Grounding Tool](https://ai.google.dev/gemini-api/docs/maps-grounding). 
 
 This framework specifically analyzes the interplay and impact of **Reasoning Thinking Effort** (configurable levels like `LOW`, `MEDIUM`, `HIGH`) and **Google Maps Grounding Tool** integration on model latency, grounding accuracy, and hallucination rates.
 
@@ -77,7 +77,7 @@ You can modify target evaluation behavior directly in the **Configuration** sect
 
 | Variable | Type | Purpose | Example Value |
 | :--- | :--- | :--- | :--- |
-| `MODELS` | `list` | List of Gemini models to evaluate. | `["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash"]` |
+| `MODELS` | `list` | List of Gemini models to evaluate. | `["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite"]` |
 | `EFFORTS` | `list` | Target reasoning levels to test. | `["low", "medium", "high"]` |
 | `QUERIES` | `list` | Custom search prompts targeting POIs. | `["Best street food spots in Hanoi", ...]` |
 | `REPETITIONS` | `int` | Number of times to repeat each query per configuration. | `18` |
