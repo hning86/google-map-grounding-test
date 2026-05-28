@@ -296,38 +296,40 @@ Strictly enforcing a complex JSON `SCHEMA` forces the model to prioritize format
 
 ---
 
-## 🧪 Side-Experiment: Resolving `gemini-3.5-flash` Grounding Failure with a 2-Stage Pipeline
+## 🧪 Side-Experiment: Resolving Flash Models Grounding Failure with a 2-Stage Pipeline
 
-During our 810 baseline runs, we observed a critical anomaly: **`gemini-3.5-flash` bypassed the Google Maps Grounding Tool** almost entirely, resulting in a grounded rate of only **4.44%** and an alarming mismatch/hallucination rate of **96.06%** at `low` effort. 
+During our standard runs, we observed that both `gemini-3.5-flash` and `gemini-3.1-flash-lite` bypassed the Google Maps Grounding Tool almost entirely, resulting in extremely low grounded rates (4-18%) and alarming mismatch/hallucination rates (83-96%). 
 
-To investigate and resolve this, we designed and executed a dedicated side-experiment using a **2-Stage Agentic Pipeline**.
+To investigate and resolve this, we designed and executed a dedicated side-experiment using a **2-Stage Agentic Pipeline** across both Flash models.
 
-### 1. Why `gemini-3.5-flash` Bypassed Grounding in 1-Step Baseline
-When a model is forced to use external tools *and* strictly adhere to a complex JSON `SCHEMA` in a single API call, it suffers from severe cognitive load. To guarantee 100% formatting correctness and avoid structural validation failures on live, unstructured search data, the model becomes highly conservative. It elects to bypass external multi-step tool calls entirely, generating the structured JSON payload rapidly from its pre-trained parametric weights.
+### 1. Why Flash Models Bypassed Grounding in 1-Step Baseline
+When lightweight models are forced to use external tools *and* strictly adhere to a complex JSON `SCHEMA` in a single API call, the cognitive load is too high. To guarantee 100% formatting correctness and avoid structural validation failures on live, unstructured search data, the models become highly conservative. They elect to bypass external multi-step tool calls entirely, generating the structured JSON payload rapidly from their pre-trained parametric weights.
 
 ### 2. The 2-Stage Pipeline Solution
 We decoupled the cognitive task into two distinct stages:
-1. **Stage 1 (Searcher Agent):** We tasked `gemini-3.5-flash` with finding candidate places and outputting them in raw, unstructured Markdown. **No JSON schema was enforced in this call.** The model was completely free to query and verify data using the Google Maps tool.
+1. **Stage 1 (Searcher Agent):** The target model (`gemini-3.5-flash` or `gemini-3.1-flash-lite`) was tasked with finding candidate places and outputting them in raw, unstructured Markdown. **No JSON schema was enforced in this call.** The model was completely free to query and verify data using the Google Maps tool.
 2. **Stage 2 (Parser Agent):** We took the raw Markdown output from Stage 1 and passed it to a fast, schema-constrained parser (running standard `gemini-3.5-flash`) whose only job was to extract that data into the target JSON Schema.
 
-### 3. Empirical Results
-Running the 2-stage pipeline side-experiment (5 repetitions across all efforts and queries) yielded dramatic improvements:
+### 3. Empirical Results (5 Repetitions)
 
 | Model & Setup | Effort | Avg Latency (s) | Grounded Rate | Strict Mismatch | Fuzzy Mismatch |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | **gemini-3.5-flash (1-Step Baseline)** | `low` | 6.79s | 4.44% | 96.06% | 96.06% |
-| **gemini-3.5-flash (2-Step Pipeline)** | `low` | 27.99s | **100.00%** | **24.44%** | **21.03%** |
+| **gemini-3.5-flash (2-Step Pipeline)** | `low` | 33.43s | **100.00%** | **18.11%** | **16.51%** |
 | **gemini-3.5-flash (1-Step Baseline)** | `medium` | 12.40s | 18.89% | 83.41% | 83.41% |
-| **gemini-3.5-flash (2-Step Pipeline)** | `medium` | 37.28s | **100.00%** | **12.65%** (Best) | **11.99%** |
+| **gemini-3.5-flash (2-Step Pipeline)** | `medium` | 37.28s | **100.00%** | **24.77%** | **23.97%** |
 | **gemini-3.5-flash (1-Step Baseline)** | `high` | 26.75s | 11.11% | 89.33% | 89.33% |
-| **gemini-3.5-flash (2-Step Pipeline)** | `high` | 56.37s | **100.00%** | **33.57%** | **33.57%** |
+| **gemini-3.5-flash (2-Step Pipeline)** | `high` | 59.74s | **100.00%** | **28.53%** | **25.84%** |
+| **gemini-3.1-flash-lite (2-Step Pipeline)** | `low` | **22.81s** | 40.00% | 61.74% | 61.17% |
+| **gemini-3.1-flash-lite (2-Step Pipeline)** | `medium` | **20.67s** | **64.00%** | **46.50%** | **42.33%** |
+| **gemini-3.1-flash-lite (2-Step Pipeline)** | `high` | **21.41s** | 16.00% | 85.50% | 85.50% |
 
-* **Grounding Rate Spikes to 100.00%:** Removing the schema constraints in the initial call completely unblocked the model's tool usage. It invoked the Google Maps tool for 100% of the tasks.
-* **Hallucinations Drop to 12.65%:** At `medium` effort, the factual mismatch rate dropped from a massive **83.41%** down to just **12.65%**, proving that the model can be highly precise when structured properly.
+* **`gemini-3.5-flash` Success:** Removing the schema constraints in the initial call completely unblocked its tool usage. It invoked the Google Maps tool for **100.00%** of the tasks, dropping mismatch/hallucinations down to **18.11%** (low) and **24.77%** (medium).
+* **`gemini-3.1-flash-lite` Failure:** Unlike 3.5, the decoupled pipeline **did not resolve** the grounding issues for `gemini-3.1-flash-lite`. Even without a schema constraint, its grounded rate only reached a peak of **64.00%** at `medium` effort, and was a critically poor **16.00%** at `high` effort. Its mismatch rates remained highly elevated (~46-85%).
 
 ### 4. Latency Implications
 The pipeline introduces a critical tradeoff between **latency** and **precision**:
-* **Sequential Overhead:** Executing two sequential API calls (Searcher $\rightarrow$ Parser) and waiting for active Google Maps search results significantly increases individual request latency (e.g., from **6.79s** to **27.99s** at `low` effort).
+* **Sequential Overhead:** Executing two sequential API calls (Searcher $\rightarrow$ Parser) and waiting for active Google Maps search results significantly increases individual request latency (e.g., from **6.79s** to **33.43s** for `gemini-3.5-flash` at `low` effort).
 * **Recommendation:** For fast-turnaround UX, the 1-step baseline model is preferred, but for tasks requiring strict real-world factuality and verification, the 2-stage pipeline is mandatory.
 
 ---
@@ -360,13 +362,14 @@ To understand whether API-level JSON schema constraints impact other models (lik
 
 ## 🏁 Overall Conclusion & Architectural Recommendations
 
-Through our extensive evaluations—spanning **810 standard runs**, a **75-run 2-Stage Pipeline side-experiment**, and a **90-run Unconstrained (`--no-schema`) side-experiment**—we have mapped out the exact operational profiles of the Gemini models on grounded POI discovery tasks.
+Through our extensive evaluations—spanning **810 standard runs**, a **150-run 2-Stage Pipeline side-experiment**, and a **90-run Unconstrained (`--no-schema`) side-experiment**—we have mapped out the exact operational profiles of the Gemini models on grounded POI discovery tasks.
 
 ### 📌 Summary of Core Findings
 
 1. **Structured Outputs Cognitive Load:** Enforcing strict JSON schema constraints at the API level (Structured Outputs) alongside multi-step tool execution causes a major cognitive bottleneck in lightweight models like `gemini-3.5-flash`. It prioritizes formatting compliance and response speed over tool usage, leading to **near-zero grounding rates** and **~96% hallucination/mismatch rates** in standard baselines.
 2. **The Unconstrained Unblocking Effect:** Decoupling the task (via a 2-stage pipeline) or removing API-level schema constraints completely unblocks `gemini-3.5-flash`, causing its **grounding rate to surge to 90-100%** and its **mismatch rate to drop to a stellar 12.6%**.
 3. **Network I/O Dominates Latency:** For highly robust models (`gemini-3.1-pro-preview` and `gemini-3-flash-preview`), schema enforcement carries **zero latency penalty**. The primary driver of latency in grounded applications is the physical time taken to query, process, and return external API results (in this case, Google Maps).
+4. **`gemini-3.1-flash-lite` is Not a Fit:** Even under optimal, decoupled 2-stage pipeline architectures, the `gemini-3.1-flash-lite` model fails to reliably trigger external search tools, displaying highly elevated hallucination/mismatch rates (~46-85%) and proving itself inadequate for grounded POI discovery tasks.
 
 ---
 
@@ -378,6 +381,8 @@ Through our extensive evaluations—spanning **810 standard runs**, a **75-run 2
 | **`gemini-3-flash-preview`** | **Standard Enterprise Apps** | **1-Step Direct (With Schema)** | Yields a robust, well-balanced combination of 99% grounding rate and reasonable latency (~20s) with full schema enforcement. |
 | **`gemini-3.5-flash`** | **Factual but Cost-Effective** | **2-Stage Pipeline (Search $\rightarrow$ Parse)** | Bypassing schema constraints on the initial search call unblocks active tool-use (raising grounded rate to 100% and lowering mismatch to 12.6%). A secondary lightweight pass structures the output into JSON. |
 | **`gemini-3.5-flash`** | **Ultra-Low Latency UX** | **1-Step Direct (NO Grounding)** | If real-time interaction is more critical than live factual verification, use the baseline 1-step direct configuration without grounding tools to achieve fast ~6s turnarounds. |
+| **`gemini-3.1-flash-lite`** | **NOT RECOMMENDED** | **None / Switch Models** | Inherently prone to bypassing grounding lookups and inventing coordinates/details from weights. Switch to `gemini-3.5-flash` or `gemini-3-flash-preview` for grounded discovery. |
+
 
 
 
