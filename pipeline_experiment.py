@@ -3,8 +3,8 @@ from evaluator import run_evaluation
 from analyzer import analyze_results
 
 if __name__ == "__main__":
-    output_file = os.path.join("result", "gemini_35_pipeline_results.jsonl")
-    report_file = os.path.join("reports", "gemini_35_pipeline_report.md")
+    output_file = os.path.join("result", "pipeline_experiment_results.jsonl")
+    report_file = os.path.join("reports", "pipeline_experiment_report.md")
     
     # Clean up any previous results
     if os.path.exists(output_file):
@@ -13,11 +13,11 @@ if __name__ == "__main__":
         except:
             pass
             
-    # Run for gemini-3.5-flash only across all efforts and queries, with 5 repetitions
+    # Run for both gemini-3.5-flash and gemini-3.1-flash-lite across all efforts and queries, with 5 repetitions
     run_evaluation(
         output_file=output_file,
         repetitions=5,
-        models=["gemini-3.5-flash"],
+        models=["gemini-3.5-flash", "gemini-3.1-flash-lite"],
         efforts=["low", "medium", "high"],
         queries=[
             "Best street food spots and street food markets in Hanoi",

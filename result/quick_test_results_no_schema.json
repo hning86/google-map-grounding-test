@@ -1,0 +1,42 @@
+[
+  {
+    "model": "gemini-3.5-flash",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1779891484.015209,
+    "success": true,
+    "pipeline": false,
+    "latency": 12.746163845062256,
+    "response_text": "Hanoi is a world-renowned destination for street food. Below are some of the best verified street food spots, night markets, and dining streets in Hanoi with up-to-date details.\n\n### 1. Key Street Food Spots & Restaurants\nThese popular locations offer exceptional traditional Vietnamese street food and local delights:\n\n*   **Banh Mi 25**\n    *   **Description:** This highly popular sandwich spot is famous for serving some of the best Banh Mi in the city, featuring fresh, crispy baguettes filled with savory meats, pate, and fresh herbs.\n    *   **Address:** 25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam\n    *   **Rating:** 4.4⭐ (16,650 reviews)\n*   **Bun Cha Ta Hanoi**\n    *   **Description:** A fantastic stop to experience authentic *bún chả*—chargrilled pork patties served in a warm, sweet, and savory broth alongside rice noodles and heaps of fresh greens.\n    *   **Address:** 21 P. Nguyễn Hữu Huân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam\n    *   **Rating:** 4.4⭐ (5,049 reviews)\n*   **Gánh Hà Nội**\n    *   **Description:** Located deep in the Old Quarter, this spot serves traditional Vietnamese street food staples in a vibrant setting.\n    *   **Address:** 115 P. Hàng Buồm, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam\n    *   **Rating:** 4.9⭐ (9,654 reviews)\n\n---\n\n### 2. Street Food Markets & Bustling Culinary Streets\nIf you prefer to wander and sample a wide variety of bites, these locations are excellent culinary hubs:\n\n*   **Dong Xuan Market**\n    *   **Description:** While primarily a historic multi-story trading center, the alleyways surrounding this market feature an extensive selection of local daytime street food vendors. You can easily find *bún riêu* (tomato noodle soup), *chè* (sweet dessert soup), and crispy spring rolls. \n    *   **Address:** Chợ Đồng Xuân, 23 P. Cầu Đông, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam\n    *   **Rating:** 3.7⭐ (402 reviews)\n*   **Ta Hien Beer Street**\n    *   **Description:** Famous for its bustling nightlife, this street is lined with low plastic stools where visitors gather to drink cold draft beer (*bia hơi*). It is a prime destination to order classic street side drinking snacks like grilled pork skewers, fried cheese sticks, and lemongrass steamed clams.\n    *   **Address:** 41-36 P. Lương Ngọc Quyến, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam\n    *   **Rating:** 4.3⭐ (10,070 reviews)\n*   **Hanoi Weekend Night Market (Start Point)**\n    *   **Description:** Operating on Friday, Saturday, and Sunday evenings, this night market stretches through the heart of the Old Quarter. Alongside clothing and souvenirs, you will find a massive selection of cheap and tasty street food, from grilled skewers to sweet local desserts.\n    *   **Address:** 104 P. Hàng Đào, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam\n    *   **Rating:** 4.3⭐ (129 reviews)",
+    "grounding_chunks": [
+      {
+        "title": "Banh Mi 25"
+      },
+      {
+        "title": "Ta Hien Beer Street"
+      },
+      {
+        "title": "Dong xuan market"
+      },
+      {
+        "title": "Bun Cha Ta Hanoi"
+      },
+      {
+        "title": "Gánh Hà Nội"
+      },
+      {
+        "title": "Hanoi Old Quarter"
+      },
+      {
+        "title": "Night market start ( Friday to Sunday)"
+      },
+      {
+        "title": "Beer Street Hanoi"
+      },
+      {
+        "title": "Hanoi Weekend Night Market Start Point"
+      }
+    ]
+  }
+]
