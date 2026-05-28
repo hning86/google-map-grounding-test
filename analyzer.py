@@ -125,10 +125,10 @@ if __name__ == "__main__":
     
     # Determine input and output files
     if args.quick:
-        input_file = os.path.join("result", "quick_test_results.jsonl")
+        input_file = os.path.join("results", "quick_test_results.jsonl")
         output_report = os.path.join("reports", "quick_test_report.md")
     else:
-        input_file = args.input or os.path.join("result", "full_eval_results.jsonl")
+        input_file = args.input or os.path.join("results", "full_eval_results.jsonl")
         output_report = args.output or os.path.join("reports", "full_evaluation_report.md")
         
     analyze_results(input_file, output_report)

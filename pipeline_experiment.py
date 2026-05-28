@@ -3,7 +3,7 @@ from evaluator import run_evaluation
 from analyzer import analyze_results
 
 if __name__ == "__main__":
-    output_file = os.path.join("result", "pipeline_experiment_results.jsonl")
+    output_file = os.path.join("results", "pipeline_experiment_results.jsonl")
     report_file = os.path.join("reports", "pipeline_experiment_report.md")
     
     # Clean up any previous results

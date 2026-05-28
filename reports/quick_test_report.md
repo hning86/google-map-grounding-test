@@ -4,7 +4,7 @@
 
 | model            | effort   |   latency |   grounded_rate |   strict_mismatch_rate |   fuzzy_mismatch_rate |
 |:-----------------|:---------|----------:|----------------:|-----------------------:|----------------------:|
-| gemini-3.5-flash | low      |   10.6122 |               0 |                      1 |                     1 |
+| gemini-3.5-flash | low      |   13.4957 |               1 |                      0 |                     0 |
 
 ## Detailed Analysis
 

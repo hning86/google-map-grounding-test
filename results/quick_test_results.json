@@ -1,0 +1,76 @@
+[
+  {
+    "model": "gemini-3.5-flash",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1779940010.1397948,
+    "success": true,
+    "pipeline": false,
+    "latency": 13.495690107345581,
+    "response_text": {
+      "places": [
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.4",
+          "review_count": "16652",
+          "text": "One of Hanoi's most iconic street food stalls specializing in Banh Mi [1.2.3]. This highly popular spot offers an extensive menu of crispy baguettes with classic pâté, pork, chicken, and highly-rated vegetarian options. Guests can sit on tiny plastic stools in a simple seating area across the road to enjoy their food.",
+          "place_type": "Sandwich Shop",
+          "opening_hours": "Monday: 7:00 AM – 9:00 PM, Tuesday: 7:00 AM – 9:00 PM, Wednesday: 7:00 AM – 9:00 PM, Thursday: 7:00 AM – 9:00 PM, Friday: 7:00 AM – 9:00 PM, Saturday: 7:00 AM – 9:00 PM, Sunday: 7:00 AM – 9:00 PM",
+          "entry_price": "Inexpensive",
+          "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "Ta Hien Beer Street",
+          "rating": "4.3",
+          "review_count": "10070",
+          "text": "A legendary walking street in Hanoi's Old Quarter that comes alive on weekend evenings. It is the ultimate hub for street dining, where locals and travelers sit on low plastic stools to enjoy cheap draught beer (Bia Hoi) alongside various Vietnamese street snacks, grilled skewers, and fried foods.",
+          "place_type": "Tourist Attraction",
+          "opening_hours": "Monday: Closed, Tuesday: Closed, Wednesday: Closed, Thursday: Closed, Friday: 7:00 – 11:00 PM, Saturday: 7:00 – 11:00 PM, Sunday: 7:00 – 11:00 PM",
+          "entry_price": "Free entry",
+          "address": "41-36 P. Lương Ngọc Quyến, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Bun Cha Ta Hanoi",
+          "rating": "4.4",
+          "review_count": "5049",
+          "text": "A fantastic spot in the Old Quarter to try Bun Cha, one of Hanoi's most famous culinary specialties. This restaurant serves incredibly flavorful grilled pork patties and pork belly in a warm broth, served with rice noodles and a mountain of fresh herbs, as well as highly rated vegetarian variations.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "Monday: 8:00 AM – 10:00 PM, Tuesday: 8:00 AM – 10:00 PM, Wednesday: 8:00 AM – 10:00 PM, Thursday: 8:00 AM – 10:00 PM, Friday: 8:00 AM – 10:00 PM, Saturday: 8:00 AM – 10:00 PM, Sunday: 8:00 AM – 10:00 PM",
+          "entry_price": "Inexpensive",
+          "address": "21 P. Nguyễn Hữu Huân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Dong xuan market",
+          "rating": "3.7",
+          "review_count": "402",
+          "text": "Hanoi's largest indoor market is a bustling sensory experience. While the upper floors focus on wholesale clothing and goods, the alleyways and ground floors are packed with vibrant food stalls serving authentic local street food, including Cháo Sườn (rib rice porridge), Bún Chả, and sweet Chè desserts.",
+          "place_type": "Market",
+          "opening_hours": "Monday: 6:00 AM – 6:00 PM, Tuesday: 6:00 AM – 6:00 PM, Wednesday: 6:00 AM – 6:00 PM, Thursday: 6:00 AM – 6:00 PM, Friday: 6:00 AM – 6:00 PM, Saturday: 6:00 AM – 6:00 PM, Sunday: 6:00 AM – 6:00 PM",
+          "entry_price": "Free entry",
+          "address": "Chợ Đồng Xuân, 23 P. Cầu Đông, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": [
+      {
+        "title": "Banh Mi 25"
+      },
+      {
+        "title": "Ta Hien Beer Street"
+      },
+      {
+        "title": "Hanoi Old Quarter"
+      },
+      {
+        "title": "Bun Cha Ta Hanoi"
+      },
+      {
+        "title": "Dong xuan market"
+      },
+      {
+        "title": "Night market start ( Friday to Sunday)"
+      }
+    ]
+  }
+]

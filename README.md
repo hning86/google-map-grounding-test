@@ -23,20 +23,18 @@ This framework specifically analyzes the interplay and impact of **Reasoning Thi
 gemini-eval/
 ├── evaluator.py                 # Unified benchmark runner with CLI args, --quick, and --pipeline modes
 ├── analyzer.py                  # Unified report builder with CLI args & --quick shortcut
-├── pipeline_experiment.py       # Dedicated side-experiment for gemini-3.5-flash pipeline
-├── result/                      # Directory containing all raw and pretty-printed JSON/JSONL results
+├── pipeline_experiment.py       # Dedicated side-experiment for Flash models pipeline
+├── results/                     # Directory containing all raw and pretty-printed JSON/JSONL results
 │   ├── full_eval_results.jsonl
 │   ├── full_eval_results.json
 │   ├── quick_test_results.jsonl
 │   ├── quick_test_results.json
-│   ├── pipeline_quick_results.jsonl
-│   ├── pipeline_quick_results.json
-│   └── gemini_35_pipeline_results.jsonl
+│   ├── pipeline_experiment_results.jsonl
+│   └── pipeline_experiment_results.json
 ├── reports/                     # Directory containing all generated markdown metrics reports
 │   ├── full_evaluation_report.md
 │   ├── quick_test_report.md
-│   ├── pipeline_quick_report.md
-│   └── gemini_35_pipeline_report.md
+│   └── pipeline_experiment_report.md
 ├── pyproject.toml               # Project dependencies & metadata (managed via uv)
 └── README.md                    # Project overview and usage instructions
 ```

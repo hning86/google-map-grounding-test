@@ -273,7 +273,7 @@ if __name__ == "__main__":
         if args.no_schema:
             base, ext = os.path.splitext(default_name)
             default_name = base + "_no_schema" + ext
-        output_file = args.output or os.path.join("result", default_name)
+        output_file = args.output or os.path.join("results", default_name)
         repetitions = 1
         eval_models = ["gemini-3.5-flash"]
         eval_efforts = ["low"]
@@ -283,7 +283,7 @@ if __name__ == "__main__":
         if args.no_schema:
             base, ext = os.path.splitext(default_name)
             default_name = base + "_no_schema" + ext
-        output_file = args.output or os.path.join("result", default_name)
+        output_file = args.output or os.path.join("results", default_name)
         repetitions = args.repetitions or 18
         eval_models = MODELS
         eval_efforts = EFFORTS
