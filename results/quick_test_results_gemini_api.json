@@ -1,0 +1,57 @@
+[
+  {
+    "model": "gemini-3.5-flash",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1780496858.9053519,
+    "success": true,
+    "pipeline": false,
+    "latency": 28.622215032577515,
+    "response_text": {
+      "places": [
+        {
+          "title": "Dong Xuan Market (Chợ Đồng Xuân)",
+          "rating": "4.1",
+          "review_count": "15300",
+          "text": "The largest and most historic indoor market in Hanoi's Old Quarter. While the upper floors sell wholesale goods and fabrics, the ground floor and surrounding alleys are a street food paradise. Head specifically to Dong Xuan Alley (Ngõ Đồng Xuân) to try classic dishes like bún chả, cháo sườn (pork rib porridge), and bánh tôm (crispy shrimp cakes).",
+          "place_type": "Market",
+          "opening_hours": "Daily: 6:00 AM - 6:00 PM",
+          "entry_price": "Free",
+          "address": "Đồng Xuân, Hoàn Kiếm, Hanoi, Vietnam"
+        },
+        {
+          "title": "Hanoi Weekend Night Market",
+          "rating": "4.3",
+          "review_count": "6200",
+          "text": "Stretching from Hang Dao Street all the way to Dong Xuan Market, this massive pedestrian-only weekend market comes alive every Friday, Saturday, and Sunday evening. It is an incredibly lively spot packed with countless street food vendors serving up grilled skewers, tteokbokki, fruit cups, and sweet Vietnamese desserts (chè) amidst thousands of shoppers.",
+          "place_type": "Night Market",
+          "opening_hours": "Friday - Sunday: 6:00 PM - Midnight",
+          "entry_price": "Free",
+          "address": "104 P. Hàng Đào, Hàng Trống, Hoàn Kiếm, Hanoi, Vietnam"
+        },
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.5",
+          "review_count": "11400",
+          "text": "Arguably the most famous banh mi spot in Hanoi. This beloved establishment began as a humble street stall and has since expanded to multiple seating areas on the same street. It is highly praised for its exceptionally fresh, crispy baguettes filled with flavorful pâté, barbecued pork, pickled vegetables, and options for chicken, beef, or vegetarian tofu.",
+          "place_type": "Street Food Stall",
+          "opening_hours": "Daily: 7:00 AM - 9:00 PM",
+          "entry_price": "VND 25,000 - 45,000",
+          "address": "25 P. Hàng Cá, Hàng Bồ, Hoàn Kiếm, Hanoi, Vietnam"
+        },
+        {
+          "title": "Bun Cha Huong Lien",
+          "rating": "4.1",
+          "review_count": "8900",
+          "text": "Widely known as 'Obama Bun Cha' after former U.S. President Barack Obama and legendary chef Anthony Bourdain famously dined here together in 2016. This no-frills, multi-story street food restaurant serves exceptional bún chả (charcoal-grilled pork patties and pork belly in a warm, sweet-and-sour dipping broth with rice noodles) and crispy 'Nem Cua Bể' (crab spring rolls).",
+          "place_type": "Restaurant",
+          "opening_hours": "Daily: 8:00 AM - 8:00 PM",
+          "entry_price": "VND 50,000 - 100,000",
+          "address": "24 P. Lê Văn Hưu, Phan Chu Trinh, Hai Bà Trưng, Hanoi, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": []
+  }
+]

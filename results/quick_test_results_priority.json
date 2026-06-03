@@ -1,0 +1,67 @@
+[
+  {
+    "model": "gemini-3.5-flash",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1780498694.97436,
+    "success": true,
+    "pipeline": false,
+    "latency": 18.539063930511475,
+    "response_text": {
+      "places": [
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.4",
+          "review_count": "16700",
+          "text": "One of Hanoi's most famous street food spots, Banh Mi 25 is highly praised for its exceptionally crispy baguettes packed with fresh ingredients like pâté, pork, and pickled veggies. Grab a seat on the tiny stools across the street to soak in the bustling neighborhood atmosphere.",
+          "place_type": "Sandwich Shop",
+          "opening_hours": "Monday - Sunday: 7:00 AM – 9:00 PM",
+          "entry_price": "Inexpensive",
+          "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "Bún chả Hương Liên",
+          "rating": "4.1",
+          "review_count": "12045",
+          "text": "Commonly known as 'Bun Cha Obama' after President Barack Obama and Anthony Bourdain famously dined here, this legendary multi-story spot offers classic Hanoian grilled pork patties over noodles in a sweet-savory broth, surrounded by local diner charm.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "Monday - Sunday: 8:00 AM – 8:00 PM",
+          "entry_price": "Moderate",
+          "address": "24 P. Lê Văn Hưu, Cửa Nam, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Ta Hien Beer Street",
+          "rating": "4.3",
+          "review_count": "10079",
+          "text": "The epicenter of Hanoi's nighttime street culture, Ta Hien Street is packed shoulder-to-shoulder with miniature plastic stools. It is the ultimate spot to pair cheap local draught beer (Bia Hoi) with fried fermented pork rolls, grilled skewers, and roasted peanuts.",
+          "place_type": "Tourist Attraction",
+          "opening_hours": "Friday - Sunday: 7:00 PM – 11:00 PM",
+          "entry_price": "Free entry",
+          "address": "41-36 P. Lương Ngọc Quyến, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Gánh Hà Nội",
+          "rating": "4.9",
+          "review_count": "9838",
+          "text": "A popular dining spot nestled in the Old Quarter that serves a wide array of classic Vietnamese street food delicacies. Highly favored by visitors for its clean, lively atmosphere and authentic street-style food platters.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "Monday - Sunday: 10:00 AM – 11:00 PM",
+          "entry_price": "Moderate",
+          "address": "115 P. Hàng Buồm, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Chợ đêm Đồng Xuân - ngành hàng ẩm thực",
+          "rating": "4.1",
+          "review_count": "631",
+          "text": "The food alley of the legendary Dong Xuan Night Market comes alive with local Hanoian street treats. Wander through the dense stalls to find everything from hot pots and grilled meat skewers to sweet dessert soups (che) and traditional porridge.",
+          "place_type": "Market",
+          "opening_hours": "Friday - Sunday evenings",
+          "entry_price": "Free entry",
+          "address": "2RPX+WWW Chợ Đồng Xuân, Ng. Đồng Xuân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": []
+  }
+]

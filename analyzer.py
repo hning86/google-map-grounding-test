@@ -120,15 +120,20 @@ if __name__ == "__main__":
     parser.add_argument("--input", type=str, help="Path to the input JSONL raw results file.")
     parser.add_argument("--output", type=str, help="Path to save the output markdown report.")
     parser.add_argument("--quick", action="store_true", help="Shortcut to use quick_test_results.jsonl and quick_test_report.md.")
+    parser.add_argument("--priority", action="store_true", help="Analyze Priority PayGo evaluation results.")
     
     args = parser.parse_args()
     
+    suffix = ""
+    if args.priority:
+        suffix = "_priority"
+        
     # Determine input and output files
     if args.quick:
-        input_file = os.path.join("results", "quick_test_results.jsonl")
-        output_report = os.path.join("reports", "quick_test_report.md")
+        input_file = os.path.join("results", f"quick_test_results{suffix}.jsonl")
+        output_report = os.path.join("reports", f"quick_test_report{suffix}.md")
     else:
-        input_file = args.input or os.path.join("results", "full_eval_results.jsonl")
-        output_report = args.output or os.path.join("reports", "full_evaluation_report.md")
+        input_file = args.input or os.path.join("results", f"full_eval_results{suffix}.jsonl")
+        output_report = args.output or os.path.join("reports", f"full_evaluation_report{suffix}.md")
         
     analyze_results(input_file, output_report)

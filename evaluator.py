@@ -7,6 +7,9 @@ import pandas as pd
 from tqdm import tqdm
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuration (Global settings)
 MODELS = ["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite"]
@@ -18,8 +21,8 @@ QUERIES = [
     "Hidden specialty coffee shops in Tokyo",
     "Best rooftop bars with a view in Bangkok"
 ]
-PROJECT_ID = "ninghai-ccai"
-LOCATION = "global"
+PROJECT_ID = os.getenv("PROJECT_ID", "ninghai-ccai")
+LOCATION = os.getenv("LOCATION", "global")
 
 # Schema definition for controlled generation
 SCHEMA = {
@@ -108,12 +111,46 @@ def save_as_pretty_json(jsonl_file):
         json.dump(records, f, indent=2, ensure_ascii=False)
     print(f"Pretty-printed results successfully saved to {pretty_json_file}")
 
-def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipeline=False, workers=5, no_schema=False):
-    client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipeline=False, workers=5, no_schema=False, use_vertex=True, use_priority=False):
+    if use_vertex:
+        if use_priority:
+            client = genai.Client(
+                vertexai=True,
+                project=PROJECT_ID,
+                location=LOCATION,
+                http_options=types.HttpOptions(
+                    api_version="v1",
+                    headers={
+                        "X-Vertex-AI-LLM-Shared-Request-Type": "priority"
+                    }
+                )
+            )
+        else:
+            client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+        tools = [types.Tool(google_maps=types.GoogleMaps())]
+        response_schema = SCHEMA
+    else:
+        client = genai.Client()
+        tools = [types.Tool(google_search=types.GoogleSearch())]
+        
+        def strip_additional_properties(s):
+            if isinstance(s, dict):
+                return {k: strip_additional_properties(v) for k, v in s.items() if k != "additionalProperties"}
+            elif isinstance(s, list):
+                return [strip_additional_properties(item) for item in s]
+            return s
+        response_schema = strip_additional_properties(SCHEMA)
+        
+    system_instruction_searcher = SYSTEM_INSTRUCTION_SEARCHER
+    system_instruction_single_step = SYSTEM_INSTRUCTION_SINGLE_STEP
+    if not use_vertex:
+        system_instruction_searcher = system_instruction_searcher.replace("Google Maps search query", "Google Search query").replace("Google Maps grounding search", "Google Search grounding")
+        system_instruction_single_step = system_instruction_single_step.replace("Google Maps search query", "Google Search query").replace("Google Maps grounding search", "Google Search grounding").replace("Google Maps grounding results", "Google Search grounding results")
     
     total_calls = len(models) * len(efforts) * len(queries) * repetitions
     mode_str = "Pipeline (2-Step)" if use_pipeline else "Baseline (1-Step)"
-    print(f"Starting evaluation [{mode_str}]: {total_calls} total API calls ({repetitions} repetitions per configuration) with {workers} parallel workers")
+    api_str = "Vertex AI API" if use_vertex else "Google Gemini API"
+    print(f"Starting evaluation [{mode_str}] via {api_str}: {total_calls} total API calls ({repetitions} repetitions per configuration) with {workers} parallel workers")
     
     tasks = []
     for model in models:
@@ -145,11 +182,11 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                 if use_pipeline:
                     # --- STEP 1: SEARCHER AGENT ---
                     config_searcher = types.GenerateContentConfig(
-                        tools=[types.Tool(google_maps=types.GoogleMaps())],
+                        tools=tools,
                         thinking_config=types.ThinkingConfig(
                             thinking_level=effort.upper()
                         ),
-                        system_instruction=SYSTEM_INSTRUCTION_SEARCHER
+                        system_instruction=system_instruction_searcher
                     )
                     
                     start_time = time.time()
@@ -165,7 +202,7 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                     config_parser = types.GenerateContentConfig(
                         system_instruction=SYSTEM_INSTRUCTION_PARSER,
                         response_mime_type="application/json",
-                        response_schema=SCHEMA
+                        response_schema=response_schema
                     )
                     
                     start_parser = time.time()
@@ -189,6 +226,11 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                                     grounding_chunks.append({
                                         "title": chunk.maps.title
                                     })
+                                elif chunk.web:
+                                    grounding_chunks.append({
+                                        "title": chunk.web.title,
+                                        "uri": chunk.web.uri
+                                    })
                     record["grounding_chunks"] = grounding_chunks
                     record["success"] = True
                     
@@ -196,21 +238,21 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                     # --- BASELINE: 1-STEP DIRECT GENERATION ---
                     if no_schema:
                         config = types.GenerateContentConfig(
-                            tools=[types.Tool(google_maps=types.GoogleMaps())],
+                            tools=tools,
                             thinking_config=types.ThinkingConfig(
                                 thinking_level=effort.upper()
                             ),
-                            system_instruction=SYSTEM_INSTRUCTION_SINGLE_STEP
+                            system_instruction=system_instruction_single_step
                         )
                     else:
                         config = types.GenerateContentConfig(
-                            tools=[types.Tool(google_maps=types.GoogleMaps())],
+                            tools=tools,
                             thinking_config=types.ThinkingConfig(
                                 thinking_level=effort.upper()
                             ),
-                            system_instruction=SYSTEM_INSTRUCTION_SINGLE_STEP,
+                            system_instruction=system_instruction_single_step,
                             response_mime_type="application/json",
-                            response_schema=SCHEMA
+                            response_schema=response_schema
                         )
                     
                     start_time = time.time()
@@ -232,6 +274,11 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                                 if chunk.maps:
                                     grounding_chunks.append({
                                         "title": chunk.maps.title
+                                    })
+                                elif chunk.web:
+                                    grounding_chunks.append({
+                                        "title": chunk.web.title,
+                                        "uri": chunk.web.uri
                                     })
                     record["grounding_chunks"] = grounding_chunks
                     record["success"] = True
@@ -258,21 +305,31 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Run Gemini POI Discovery benchmarks with Google Maps grounding.")
+    parser = argparse.ArgumentParser(description="Run Gemini POI Discovery benchmarks with Google Maps or Web search grounding.")
     parser.add_argument("--output", type=str, help="Path to save the output JSONL raw results file.")
     parser.add_argument("--repetitions", "-r", type=int, help="Number of repetitions per model/effort combination.")
     parser.add_argument("--quick", action="store_true", help="Shortcut to run a fast dry-run with 1 repetition.")
     parser.add_argument("--pipeline", action="store_true", help="Enable two-step agentic pipeline (Searcher + Schema Parser).")
     parser.add_argument("--workers", "-w", type=int, default=5, help="Number of concurrent workers for parallel execution.")
     parser.add_argument("--no-schema", action="store_true", help="Disable API-level JSON Schema enforcement (freeform markdown).")
+    parser.add_argument("--gemini-api", action="store_true", help="Use the Google Gemini API (Developer API) instead of Vertex AI API.")
+    parser.add_argument("--priority", action="store_true", help="Use Priority PayGo latency optimization (Vertex AI only).")
     
     args = parser.parse_args()
+    
+    suffix = ""
+    if args.gemini_api:
+        suffix = "_gemini_api"
+    elif args.priority:
+        suffix = "_priority"
     
     if args.quick:
         default_name = "pipeline_quick_results.jsonl" if args.pipeline else "quick_test_results.jsonl"
         if args.no_schema:
             base, ext = os.path.splitext(default_name)
             default_name = base + "_no_schema" + ext
+        base, ext = os.path.splitext(default_name)
+        default_name = base + suffix + ext
         output_file = args.output or os.path.join("results", default_name)
         repetitions = 1
         eval_models = ["gemini-3.5-flash"]
@@ -283,10 +340,23 @@ if __name__ == "__main__":
         if args.no_schema:
             base, ext = os.path.splitext(default_name)
             default_name = base + "_no_schema" + ext
+        base, ext = os.path.splitext(default_name)
+        default_name = base + suffix + ext
         output_file = args.output or os.path.join("results", default_name)
         repetitions = args.repetitions or 18
         eval_models = MODELS
         eval_efforts = EFFORTS
         eval_queries = QUERIES
         
-    run_evaluation(output_file, repetitions, eval_models, eval_efforts, eval_queries, use_pipeline=args.pipeline, workers=args.workers, no_schema=args.no_schema)
+    run_evaluation(
+        output_file, 
+        repetitions, 
+        eval_models, 
+        eval_efforts, 
+        eval_queries, 
+        use_pipeline=args.pipeline, 
+        workers=args.workers, 
+        no_schema=args.no_schema,
+        use_vertex=not args.gemini_api,
+        use_priority=args.priority
+    )
