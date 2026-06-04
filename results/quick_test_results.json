@@ -1,64 +1,352 @@
 [
   {
-    "model": "gemini-3.5-flash",
+    "model": "gemini-3.1-flash-lite",
     "effort": "low",
     "query": "Best street food spots and street food markets in Hanoi",
     "iteration": 0,
-    "timestamp": 1780498121.7531981,
+    "timestamp": 1780574105.654716,
     "success": true,
     "pipeline": false,
-    "latency": 16.911792278289795,
+    "latency": 8.992251873016357,
     "response_text": {
       "places": [
         {
-          "title": "Ta Hien Beer Street",
-          "rating": "4.3",
-          "review_count": "10079",
-          "text": "A bustling, vibrant street in Hanoi's Old Quarter famous for its energetic nightlife. Lined with tiny plastic stools, it's the ultimate spot to experience local street food, grilled skewers, and fresh local beer (Bia Hoi) alongside locals and travelers [2.3.1].",
-          "place_type": "Tourist Attraction / Food Street",
-          "opening_hours": "Friday - Sunday: 7:00 PM – 11:00 PM (Individual vendors vary daily)",
-          "entry_price": "Free",
-          "address": "41-36 P. Lương Ngọc Quyến, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
-        },
-        {
-          "title": "Chợ đêm Đồng Xuân - ngành hàng ẩm thực",
-          "rating": "4.1",
-          "review_count": "631",
-          "text": "Located at the iconic Dong Xuan Market, this dedicated night food section comes alive with street vendors selling an array of Vietnamese delicacies, from piping hot cháo sườn (rib porridge) to grilled pork skewers and sweet desserts.",
-          "place_type": "Night Market Section",
-          "opening_hours": "Open Friday, Saturday, and Sunday nights",
-          "entry_price": "Free",
-          "address": "2RPX+WWW Chợ Đồng Xuân, Ng. Đồng Xuân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
-        },
-        {
           "title": "Banh Mi 25",
           "rating": "4.4",
-          "review_count": "16700",
-          "text": "Arguably Hanoi's most famous banh mi spot, this popular stall serves exceptionally crispy, fresh French baguettes stuffed with high-quality pâté, roasted meats, pickles, and fresh herbs, with fantastic vegetarian and vegan options available.",
+          "review_count": "16708",
+          "text": "A famous and highly-rated sandwich shop in the Old Quarter offering an extensive menu of traditional Vietnamese banh mi.",
           "place_type": "Sandwich Shop",
-          "opening_hours": "Monday - Sunday: 7:00 AM – 9:00 PM",
+          "opening_hours": "7:00 AM – 9:00 PM daily",
           "entry_price": "Inexpensive",
           "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
         },
         {
-          "title": "Phố ẩm thực Tống Duy Tân",
-          "rating": "3.9",
-          "review_count": "8",
-          "text": "Known as Hanoi's premier 24-hour food street, Tong Duy Tan is lined with endless eateries serving iconic street foods like cơm đảo gà rang (sizzling fried rice with chicken), hotpots, and traditional Vietnamese steamed dishes.",
-          "place_type": "Food Street / Restaurant Hub",
-          "opening_hours": "Most venues open 24 hours daily",
-          "entry_price": "Free",
-          "address": "2RHV+FHW, Cấm Chỉ, Hoàn Kiếm, Hà Nội, Vietnam"
+          "title": "Gánh Hà Nội",
+          "rating": "4.9",
+          "review_count": "9848",
+          "text": "A highly-rated Vietnamese restaurant in the Old Quarter known for its local atmosphere and diverse menu.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "10:00 AM – 11:00 PM daily",
+          "entry_price": "Moderate",
+          "address": "115 P. Hàng Buồm, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Hanoi Food Culture Restaurant & Cooking Class",
+          "rating": "4.9",
+          "review_count": "4665",
+          "text": "Offers a blend of dining and culinary experiences, focusing on traditional Hanoian food culture.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "10:00 AM – 10:00 PM daily",
+          "address": "60 Ng. Phất Lộc, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "Bamichao - Vua Banh Mi Chao",
+          "rating": "4.8",
+          "review_count": "543",
+          "text": "A popular spot specializing in Banh Mi Chao (pan bread), a favorite local street food style.",
+          "place_type": "Restaurant",
+          "opening_hours": "7:30 AM – 9:00 PM daily",
+          "address": "1 P. Thanh Hà, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Hàng Da Market",
+          "rating": "3.8",
+          "review_count": "3306",
+          "text": "A multi-story indoor market that is a great place to explore local products, crafts, and food stalls.",
+          "place_type": "Market",
+          "opening_hours": "5:00 AM – 8:00 PM daily",
+          "address": "P. Hàng Da, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "May Hanoi Train Street Restaurant - Coffee & Food",
+          "rating": "4.9",
+          "review_count": "288",
+          "text": "Located near the famous Train Street, this restaurant offers coffee and food with a unique view of the passing trains.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "8:00 AM – 11:00 PM (varies slightly by day)",
+          "address": "42 Phố Đường Tàu, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": []
+  },
+  {
+    "model": "gemini-3.5-flash",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1780574105.653416,
+    "success": true,
+    "pipeline": false,
+    "latency": 14.186778783798218,
+    "response_text": {
+      "places": [
+        {
+          "title": "Hanoi Old Quarter",
+          "rating": "4.6",
+          "review_count": "9775",
+          "text": "A historic trading district featuring narrow lanes packed with food hawkers, small restaurants, and a bustling weekend night market. It is the absolute heart of Hanoi's legendary street food scene.",
+          "place_type": "Tourist Attraction / Street Food Hub",
+          "opening_hours": "Open 24 hours",
+          "address": "P. Hàng Ngang, Hàng Đào, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.4",
+          "review_count": "16708",
+          "text": "An iconic sandwich stall and seating area in the Old Quarter offering an extensive, highly-rated menu of inexpensive banh mi, ranging from classic pâté and pork to modern chicken and vegetarian options.",
+          "place_type": "Sandwich Shop",
+          "opening_hours": "Monday: 7:00 AM – 9:00 PM; Tuesday: 7:00 AM – 9:00 PM; Wednesday: 7:00 AM – 9:00 PM; Thursday: 7:00 AM – 9:00 PM; Friday: 7:00 AM – 9:00 PM; Saturday: 7:00 AM – 9:00 PM; Sunday: 7:00 AM – 9:00 PM",
+          "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
         },
         {
           "title": "Phở Gia Truyền Bát Đàn",
           "rating": "4.3",
           "review_count": "5541",
-          "text": "A legendary establishment globally celebrated for serving some of the finest authentic beef pho in Hanoi. Expect to queue up with locals for a steaming, richly aromatic bowl of tender beef noodles crafted from a long-held family recipe.",
-          "place_type": "Vietnamese Pho Restaurant",
-          "opening_hours": "Monday - Sunday: 6:00 AM – 11:00 AM, 5:00 PM – 9:30 PM",
-          "entry_price": "Inexpensive",
+          "text": "A legendary street food institution renowned for serving traditional, deeply flavorful beef pho. Expect to wait in line during peak hours to experience this local favorite.",
+          "place_type": "Pho Restaurant",
+          "opening_hours": "Monday: 6:00 – 11:00 AM, 5:00 – 9:30 PM; Tuesday: 6:00 – 11:00 AM, 5:00 – 9:30 PM; Wednesday: 6:00 – 11:00 AM, 5:00 – 9:30 PM; Thursday: 6:00 – 11:00 AM, 5:00 – 9:30 PM; Friday: 6:00 – 11:00 AM, 5:00 – 9:30 PM; Saturday: 6:00 – 11:00 AM, 5:00 – 9:30 PM; Sunday: 6:00 – 11:00 AM, 5:00 – 9:30 PM",
           "address": "49 P. Bát Đàn, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Bun Cha Ta Hanoi",
+          "rating": "4.4",
+          "review_count": "5062",
+          "text": "An outstanding and highly accessible spot in the Old Quarter specializing in bun cha—featuring chargrilled pork patties, fresh noodles, fresh herbs, and a savory dipping broth alongside crispy spring rolls.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "Monday: 8:00 AM – 10:00 PM; Tuesday: 8:00 AM – 10:00 PM; Wednesday: 8:00 AM – 10:00 PM; Thursday: 8:00 AM – 10:00 PM; Friday: 8:00 AM – 10:00 PM; Saturday: 8:00 AM – 10:00 PM; Sunday: 8:00 AM – 10:00 PM",
+          "address": "21 P. Nguyễn Hữu Huân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Phở Gà Nguyệt",
+          "rating": "4.4",
+          "review_count": "3178",
+          "text": "A bustling street-side eatery famous for its exceptional chicken pho, served both in hot, rich broth (traditional soup style) or tossed with a savory soy-based sauce (dry style).",
+          "place_type": "Vietnamese Restaurant / Pho Spot",
+          "opening_hours": "Monday: 6:30 AM – 11:30 PM; Tuesday: 6:30 AM – 11:30 PM; Wednesday: 6:30 AM – 11:30 PM; Thursday: 6:30 AM – 11:30 PM; Friday: 6:30 AM – 11:30 PM; Saturday: 6:30 AM – 11:30 PM; Sunday: 6:30 AM – 11:30 PM",
+          "address": "5b P. Phủ Doãn, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": []
+  },
+  {
+    "model": "gemini-3-flash-preview",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1780574105.6558359,
+    "success": true,
+    "pipeline": false,
+    "latency": 19.146745204925537,
+    "response_text": {
+      "places": [
+        {
+          "title": "Phố ẩm thực Tống Duy Tân",
+          "rating": "3.9",
+          "review_count": "8",
+          "text": "Located in the Hoan Kiem district, this is Hanoi's most famous 24/7 food street. It is packed with local stalls and restaurants serving classics like cháo cá (fish porridge), hotpot, and fried rice. It's a prime spot for late-night dining and soaking in the lively street atmosphere.",
+          "place_type": "Food Street",
+          "opening_hours": "Open 24 hours",
+          "address": "2RHV+FHW, Cấm Chỉ, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Dong Xuan Alley (Ngõ Đồng Xuân)",
+          "rating": "4.4",
+          "review_count": "9",
+          "text": "A narrow lane adjacent to the historic Dong Xuan Market, this alley is a concentrated hub for traditional Northern Vietnamese street food. It is best known for bún chả, snails, and various types of sweet dessert soups (chè). It offers an authentic, busy local market dining experience.",
+          "place_type": "Restaurant / Food Alley",
+          "opening_hours": "Open daily (typically daytime until early evening)",
+          "address": "Ng. Đồng Xuân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Hanoi Weekend Night Market",
+          "rating": "4.3",
+          "review_count": "134",
+          "text": "Stretching from Hang Dao Street to the edge of Dong Xuan Market, this bustling market operates on Friday, Saturday, and Sunday nights. While it sells various goods, the street food section is a major draw, offering grilled skewers, tteokbokki, fruit shakes, and traditional snacks.",
+          "place_type": "Night Market",
+          "opening_hours": "Friday–Sunday: 6:00 PM – 11:00 PM",
+          "address": "104 P. Hàng Đào, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.4",
+          "review_count": "16,708",
+          "text": "Perhaps the most iconic Banh Mi spot in Hanoi's Old Quarter, this stall has grown into a highly popular street food destination. Known for its crispy baguettes and fresh fillings, it offers a variety of options including pork, chicken, and vegetarian choices with a simple outdoor seating area.",
+          "place_type": "Sandwich Shop",
+          "opening_hours": "Monday–Sunday: 7:00 AM – 9:00 PM",
+          "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "KIN Streetfood",
+          "rating": "5.0",
+          "review_count": "17",
+          "text": "A top-rated local food spot in the heart of the Old Quarter specializing in late-night street food. It provides a more intimate street-side experience for those looking to explore authentic flavors after most day markets have closed.",
+          "place_type": "Food Stall",
+          "opening_hours": "Monday–Sunday: 6:30 PM – 2:00 AM",
+          "address": "84 P.Thuốc Bắc, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 10000, Vietnam"
+        }
+      ]
+    },
+    "grounding_chunks": [
+      {
+        "title": "Hanoi Weekend Night Market Start Point"
+      },
+      {
+        "title": "Hanoi Food Culture Restaurant & Cooking Class"
+      },
+      {
+        "title": "Night Market"
+      },
+      {
+        "title": "Hanoi Street Food Restaurant"
+      },
+      {
+        "title": "Night market start ( Friday to Sunday)"
+      },
+      {
+        "title": "Hang Bac Street"
+      },
+      {
+        "title": "Đồng Xuân Market"
+      },
+      {
+        "title": "Gánh Hà Nội"
+      },
+      {
+        "title": "Locals' Food Street"
+      },
+      {
+        "title": "Night market"
+      },
+      {
+        "title": "May Hanoi Train Street Restaurant - Coffee & Food"
+      },
+      {
+        "title": "Hanoi Street Foods"
+      },
+      {
+        "title": "Hanoi Walking Food Tour"
+      },
+      {
+        "title": "Hàng Da Market"
+      },
+      {
+        "title": "Banh Mi MAMA"
+      },
+      {
+        "title": "Banh Mi 25"
+      },
+      {
+        "title": "Hanoi Street Food Tour"
+      },
+      {
+        "title": "Outdoor store"
+      },
+      {
+        "title": "KIN Streetfood"
+      },
+      {
+        "title": "Phố ẩm thực Tống Duy Tân"
+      },
+      {
+        "title": "Boutique Hanoi Street Food Tours by Ms. Yummyface"
+      },
+      {
+        "title": "The Corner Food - Vietnamese Local Food"
+      },
+      {
+        "title": "Phở Sướng"
+      },
+      {
+        "title": "Bamichao - Vua Banh Mi Chao"
+      },
+      {
+        "title": "Street Market"
+      },
+      {
+        "title": "Chợ Hàng Mã"
+      },
+      {
+        "title": "Dong Xuan Alley"
+      },
+      {
+        "title": "Bánh Bao Bình Mỗ"
+      },
+      {
+        "title": "Snail Streetfood"
+      },
+      {
+        "title": "Ben Nghe Street Food"
+      },
+      {
+        "title": "The East"
+      },
+      {
+        "title": "Ngo Sy Lien Market"
+      }
+    ]
+  },
+  {
+    "model": "gemini-3.1-pro-preview",
+    "effort": "low",
+    "query": "Best street food spots and street food markets in Hanoi",
+    "iteration": 0,
+    "timestamp": 1780574105.655333,
+    "success": true,
+    "pipeline": false,
+    "latency": 23.20797634124756,
+    "response_text": {
+      "places": [
+        {
+          "title": "Hanoi Weekend Night Market Start Point",
+          "rating": "4.3",
+          "review_count": "134",
+          "text": "The starting point for the lively Hanoi weekend night market, where you can find a bustling atmosphere and numerous street food stalls.",
+          "place_type": "Market",
+          "opening_hours": "Monday-Thursday: Closed, Friday-Sunday: 6:00 PM - 11:00 PM",
+          "entry_price": "Free",
+          "address": "104 P. Hàng Đào, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Banh Mi 25",
+          "rating": "4.4",
+          "review_count": "16708",
+          "text": "A highly acclaimed stall serving up authentic Vietnamese street sandwiches with an extensive menu in a simple setting.",
+          "place_type": "Sandwich Shop",
+          "opening_hours": "Monday-Sunday: 7:00 AM - 9:00 PM",
+          "entry_price": "Inexpensive",
+          "address": "25 P. Hàng Cá, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội 100000, Vietnam"
+        },
+        {
+          "title": "Ta Hien Beer Street",
+          "rating": "4.3",
+          "review_count": "10081",
+          "text": "A famous tourist hub in the Old Quarter, this vibrant street is packed with local food stalls and beer bars, perfect for nighttime snacking.",
+          "place_type": "Tourist Attraction",
+          "opening_hours": "Monday-Thursday: Closed, Friday-Sunday: 7:00 PM - 11:00 PM",
+          "entry_price": "Free",
+          "address": "41-36 P. Lương Ngọc Quyến, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Gánh Hà Nội",
+          "rating": "4.9",
+          "review_count": "9848",
+          "text": "An exceptionally rated restaurant showcasing Vietnamese street food flavors in a comfortable setting.",
+          "place_type": "Vietnamese Restaurant",
+          "opening_hours": "Monday-Sunday: 10:00 AM - 11:00 PM",
+          "entry_price": "Moderate",
+          "address": "115 P. Hàng Buồm, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
+        },
+        {
+          "title": "Chợ đêm Đồng Xuân - ngành hàng ẩm thực",
+          "rating": "4.1",
+          "review_count": "631",
+          "text": "The dedicated food sector of the famous Dong Xuan Night Market, bursting with diverse Vietnamese street food options.",
+          "place_type": "Market",
+          "opening_hours": "Not specified",
+          "entry_price": "Free",
+          "address": "2RPX+WWW Chợ Đồng Xuân, Ng. Đồng Xuân, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, Vietnam"
         }
       ]
     },
@@ -67,16 +355,133 @@
         "title": "Chợ đêm Đồng Xuân - ngành hàng ẩm thực"
       },
       {
+        "title": "Night market start ( Friday to Sunday)"
+      },
+      {
+        "title": "Dong xuan market"
+      },
+      {
+        "title": "Dong Xuan Alley"
+      },
+      {
+        "title": "Hanoi Street Foods"
+      },
+      {
+        "title": "Hanoi Weekend Night Market Start Point"
+      },
+      {
+        "title": "Night market"
+      },
+      {
+        "title": "Boutique Hanoi Street Food Tours by Ms. Yummyface"
+      },
+      {
+        "title": "Hanoi Night weekend market"
+      },
+      {
+        "title": "하노이 주말 야시장 입구"
+      },
+      {
+        "title": "Hanoi Walking Food Tour"
+      },
+      {
+        "title": "Outdoor store"
+      },
+      {
+        "title": "Hanoi Old Quarter"
+      },
+      {
+        "title": "Bún Bò Nam Bộ Bách Phương"
+      },
+      {
+        "title": "Chợ Phùng Khoang"
+      },
+      {
+        "title": "Bánh Bao Bình Mỗ"
+      },
+      {
+        "title": "Banh Mi MAMA"
+      },
+      {
+        "title": "Street Market"
+      },
+      {
+        "title": "Ngo Sy Lien Market"
+      },
+      {
+        "title": "May Hanoi Train Street Restaurant - Coffee & Food"
+      },
+      {
+        "title": "Street kid Restaurant Hanoi"
+      },
+      {
+        "title": "Locals' Food Street"
+      },
+      {
+        "title": "Weekend Walking Street"
+      },
+      {
+        "title": "Bún chả CỘI phố cổ: Hanoi Specialty food & Vegetarian food"
+      },
+      {
+        "title": "Bami Bread"
+      },
+      {
+        "title": "Noodle & Roll"
+      },
+      {
+        "title": "Ben Nghe Street Food"
+      },
+      {
+        "title": "Gánh Hà Nội"
+      },
+      {
+        "title": "Bánh cuốn Bà Xuân"
+      },
+      {
+        "title": "Chợ Hàng Mã"
+      },
+      {
+        "title": "Streetside Dining - Vietnamese street food"
+      },
+      {
+        "title": "Bao An Vegan street food"
+      },
+      {
+        "title": "Hàng Da Market"
+      },
+      {
+        "title": "Hanoi Street Food Tour"
+      },
+      {
+        "title": "Hanoi Food Culture Restaurant & Cooking Class"
+      },
+      {
+        "title": "Thuần Việt 1925 Restaurant"
+      },
+      {
+        "title": "Chợ Nhà Xanh"
+      },
+      {
+        "title": "Linh Nam night market"
+      },
+      {
         "title": "Banh Mi 25"
       },
       {
-        "title": "Phố ẩm thực Tống Duy Tân"
+        "title": "Bun Cha Ta Hanoi"
       },
       {
-        "title": "Cơm Đảo Gà Rang Chim Quay - Tống Duy Tân"
+        "title": "Ta Hien Beer Street"
       },
       {
-        "title": "Phở Gia Truyền Bát Đàn"
+        "title": "Bánh Cuốn Gia Truyền Thanh Vân"
+      },
+      {
+        "title": "Bamichao - Vua Banh Mi Chao"
+      },
+      {
+        "title": "Hanoi Street Food Restaurant"
       }
     ]
   }

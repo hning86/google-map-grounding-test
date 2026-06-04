@@ -53,14 +53,13 @@ SCHEMA = {
 
 # Strategy 1: Strict Grounding System Instruction (Searcher Agent)
 SYSTEM_INSTRUCTION_SEARCHER = """
-You are a strict Point-of-Interest discovering and verifying agent. 
+You are a Point-of-Interest discovering agent. 
 Your parametric memory and training data regarding candidate places, addresses, ratings, and opening hours are considered OUTDATED and STALE.
 
 CRITICAL RULES:
 1. You are FORBIDDEN from listing any place purely from your training data.
-2. For every candidate place, you MUST execute a Google Maps search query to verify its current existence and retrieve active details.
-3. If the Google Maps grounding search does not return a location, you MUST NOT include it in your output list.
-4. You must output a clean markdown list of verified places with their verified ratings, review counts, place type, opening hours, entry price, address, and a short description.
+2. You MUST use Google Maps search queries to discover places and retrieve their current details.
+3. You must output a clean markdown list of places with their ratings, review counts, place type, opening hours, entry price, address, and a short description.
 """
 
 # Schema Parser System Instruction (Parser Agent)
@@ -72,14 +71,13 @@ Do not add, invent, or modify any factual details from the input.
 
 # Optimized Single-Step Grounding System Instruction (Forces maps tool in single JSON schema call)
 SYSTEM_INSTRUCTION_SINGLE_STEP = """
-You are a strict Point-of-Interest discovering and verifying agent.
+You are a Point-of-Interest discovering agent.
 Your parametric memory and training data regarding candidate places, addresses, ratings, and opening hours are considered OUTDATED and STALE.
 
 CRITICAL RULES:
 1. You are FORBIDDEN from listing any place purely from your training data.
-2. For every candidate place, you MUST execute a Google Maps search query to verify its current existence and retrieve active details.
-3. If the Google Maps grounding search does not return a location, you MUST NOT include it in your output.
-4. All ratings, review counts, and addresses in your final JSON response must match the Google Maps grounding results exactly.
+2. You MUST use Google Maps search queries to discover places and retrieve their current details.
+3. All ratings, review counts, and addresses in your final JSON response must match the Google Maps grounding results exactly.
 """
 
 def save_as_pretty_json(jsonl_file):
@@ -161,6 +159,8 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                     
     pbar = tqdm(total=total_calls)
     lock = threading.Lock()
+    success_count = 0
+    completed_count = 0
     
     # Open file in write mode to overwrite previous results
     if os.path.dirname(output_file):
@@ -289,8 +289,14 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                 time.sleep(2)
             
             with lock:
+                nonlocal success_count, completed_count
+                completed_count += 1
+                if record.get("success"):
+                    success_count += 1
                 f.write(json.dumps(record) + "\n")
                 f.flush()
+                success_rate = success_count / completed_count if completed_count > 0 else 0.0
+                pbar.set_postfix(success_rate=f"{success_rate:.2%}")
                 pbar.update(1)
             
             # Small delay to respect rate limits
@@ -332,7 +338,7 @@ if __name__ == "__main__":
         default_name = base + suffix + ext
         output_file = args.output or os.path.join("results", default_name)
         repetitions = 1
-        eval_models = ["gemini-3.5-flash"]
+        eval_models = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.1-pro-preview", "gemini-3-flash-preview"]
         eval_efforts = ["low"]
         eval_queries = [QUERIES[0]]
     else:
