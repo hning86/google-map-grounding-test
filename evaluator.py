@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration (Global settings)
-MODELS = ["gemini-3-flash-preview", "gemini-3.1-pro-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite"]
+MODELS = ["gemini-3.1-flash-lite-preview", "gemini-3.1-flash-lite"]
 EFFORTS = ["low", "medium", "high"]
 QUERIES = [
     "Best street food spots and street food markets in Hanoi",
@@ -60,6 +60,8 @@ CRITICAL RULES:
 1. You are FORBIDDEN from listing any place purely from your training data.
 2. You MUST use Google Maps search queries to discover places and retrieve their current details.
 3. You must output a clean markdown list of places with their ratings, review counts, place type, opening hours, entry price, address, and a short description.
+4. End each place claim with a citation like [1].
+
 """
 
 # Schema Parser System Instruction (Parser Agent)
@@ -338,7 +340,7 @@ if __name__ == "__main__":
         default_name = base + suffix + ext
         output_file = args.output or os.path.join("results", default_name)
         repetitions = 1
-        eval_models = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.1-pro-preview", "gemini-3-flash-preview"]
+        eval_models = MODELS
         eval_efforts = ["low"]
         eval_queries = [QUERIES[0]]
     else:
