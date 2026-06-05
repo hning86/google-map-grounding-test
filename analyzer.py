@@ -11,6 +11,9 @@ def analyze_results(input_file, output_report):
     data = []
     with open(input_file, "r") as f:
         for line in f:
+            line = line.strip()
+            if not line:
+                continue
             data.append(json.loads(line))
     
     df = pd.DataFrame(data)

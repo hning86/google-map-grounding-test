@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration (Global settings)
-MODELS = ["gemini-3.1-flash-lite-preview", "gemini-3.1-flash-lite"]
+MODELS = ["gemini-3.1-flash-lite-preview", "gemini-3.1-flash-lite", "gemini-3.1-pro-preview", "gemini-3.5-flash"]
 EFFORTS = ["low", "medium", "high"]
 QUERIES = [
     "Best street food spots and street food markets in Hanoi",
@@ -298,7 +298,7 @@ def run_evaluation(output_file, repetitions, models, efforts, queries, use_pipel
                 f.write(json.dumps(record) + "\n")
                 f.flush()
                 success_rate = success_count / completed_count if completed_count > 0 else 0.0
-                pbar.set_postfix(success_rate=f"{success_rate:.2%}")
+                pbar.set_postfix(success_rate=f"{success_rate:.2%} ({success_count}/{completed_count})")
                 pbar.update(1)
             
             # Small delay to respect rate limits

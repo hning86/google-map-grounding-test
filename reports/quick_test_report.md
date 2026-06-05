@@ -4,13 +4,15 @@
 
 | model                         | effort   |   latency |   grounded_rate |   strict_mismatch_rate |   fuzzy_mismatch_rate |
 |:------------------------------|:---------|----------:|----------------:|-----------------------:|----------------------:|
-| gemini-3.1-flash-lite         | low      |   5.83383 |               0 |                      1 |                     1 |
-| gemini-3.1-flash-lite-preview | low      |   6.35406 |               1 |                      0 |                     0 |
+| gemini-3.1-flash-lite         | low      |   5.10839 |               0 |                   1    |                  1    |
+| gemini-3.1-flash-lite-preview | low      |   5.97191 |               1 |                   0    |                  0    |
+| gemini-3.1-pro-preview        | low      |  23.7696  |               1 |                   0    |                  0    |
+| gemini-3.5-flash              | low      |  10.8262  |               1 |                   0.25 |                  0.25 |
 
 ## Detailed Analysis
 
-**Total calls attempted:** 2
-**Total successful calls:** 2
+**Total calls attempted:** 4
+**Total successful calls:** 4
 **Overall Success Rate:** 100.00%
 
 ### Latency by Model and Reasoning Effort
