@@ -254,30 +254,45 @@ df_success["fuzzy_mismatch_rate"] = df_success.apply(calculate_mismatch_fuzzy, a
 
 ## 📈 Live Evaluation Report Metrics
 
-Here are the actual consolidated metrics compiled from our comprehensive evaluation suite (540 total runs):
+Here are the actual consolidated metrics compiled from our comprehensive evaluation suite (1080 total runs):
 
 | Model | Effort | Latency (s) | Grounded Rate | Strict Mismatch | Fuzzy Mismatch |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **gemini-3.1-flash-lite** | `low` | **4.97s** | 0.00% | 100.00% | 100.00% |
-| **gemini-3.1-flash-lite** | `medium` | **5.39s** | 0.00% | 100.00% | 100.00% |
-| **gemini-3.1-flash-lite** | `high` | 6.00s | 0.00% | 100.00% | 100.00% |
-| **gemini-3.1-flash-lite-preview** | `low` | 5.33s | **100.00%** | 2.07% | 0.78% |
-| **gemini-3.1-flash-lite-preview** | `medium` | 5.69s | **100.00%** | 1.40% | 0.58% |
-| **gemini-3.1-flash-lite-preview** | `high` | **5.80s** | **100.00%** | **0.19%** | **0.19%** |
+| **gemini-3.1-flash-lite** | `low` | **5.55s** | 0.00% | 100.00% | 100.00% |
+| **gemini-3.1-flash-lite** | `medium` | **5.21s** | 0.00% | 100.00% | 100.00% |
+| **gemini-3.1-flash-lite** | `high` | 6.09s | 0.00% | 100.00% | 100.00% |
+| **gemini-3.1-flash-lite-preview** | `low` | 5.68s | **100.00%** | 1.32% | 1.32% |
+| **gemini-3.1-flash-lite-preview** | `medium` | 5.41s | **100.00%** | 1.51% | 1.29% |
+| **gemini-3.1-flash-lite-preview** | `high` | **6.19s** | **100.00%** | **1.05%** | **0.83%** |
+| **gemini-3.1-pro-preview** | `low` | 18.93s | 98.89% | 2.07% | 2.07% |
+| **gemini-3.1-pro-preview** | `medium` | 22.85s | **100.00%** | 2.13% | 1.94% |
+| **gemini-3.1-pro-preview** | `high` | 37.56s | **100.00%** | 5.70% | 5.70% |
+| **gemini-3.5-flash** | `low` | 14.35s | 28.89% | 72.56% | 72.56% |
+| **gemini-3.5-flash** | `medium` | 25.48s | 12.22% | 88.20% | 88.20% |
+| **gemini-3.5-flash** | `high` | 27.88s | 21.11% | 79.77% | 79.77% |
 
 > [!NOTE]
-> Higher thinking effort slightly increases request latency, but dramatically improves factual precision for the preview model, achieving a near-perfect mismatch rate of 0.19% at high effort while keeping latency under 6 seconds.
+> Higher thinking effort slightly increases request latency, but dramatically improves factual precision for the preview model, achieving a near-perfect mismatch rate of 0.83% at high effort while keeping latency under 6.2 seconds.
 
-### 📊 Actual Key Observations (540 Runs)
+### 📊 Actual Key Observations (1080 Runs)
 
 Based on the empirical findings, we observe the following model profiles:
 
 1. **🏆 The New Grounding Standard: `gemini-3.1-flash-lite-preview`**
-   * **Full Grounding Activation:** Unlike the stable release, the preview release successfully triggers external search grounding for **100.00%** of requests.
-   * **Outstanding Factual Precision:** Achieves near-perfect grounding precision, dropping mismatch rates to **~0.19%** at high effort.
-   * **Ultra-Low Latency:** Accomplishes this high-precision grounding in under **6 seconds**, combining the speed of a lightweight model with the accuracy of a high-end model.
+   * **Full Grounding Activation:** Successfully triggers external search grounding for **100.00%** of requests.
+   * **Outstanding Factual Precision:** Achieves near-perfect grounding precision, dropping fuzzy mismatch rates to **~0.83%** at high effort.
+   * **Ultra-Low Latency:** Accomplishes this high-precision grounding in under **6.2 seconds**, combining the speed of a lightweight model with the accuracy of a high-end model.
 
-2. **❌ Complete Grounding Failure: Stable `gemini-3.1-flash-lite`**
+2. **⚡ Heavyweight Reliability: `gemini-3.1-pro-preview`**
+   * **High Grounding Rate:** Achieves **98.89% to 100.00%** grounding rates across different efforts.
+   * **Solid Factual Precision:** Maintains mismatch rates below **~5.7%**.
+   * **Major Latency Penalty:** Runs are extremely slow, ranging from **18.9s** to **37.6s**, making it less suitable for real-time customer-facing interactions.
+
+3. **⚠️ Grounding Tool Bypass: `gemini-3.5-flash`**
+   * **Inconsistent Grounding:** Bypasses grounding search tools on **71-88%** of requests under structured schema constraints.
+   * **High Mismatch Rates:** Results in extremely elevated hallucination/mismatch rates (~72-88%) in the standard 1-step direct baseline.
+
+4. **❌ Complete Grounding Failure: Stable `gemini-3.1-flash-lite`**
    * **Bypasses Grounding Tool:** Yields a **0.00%** grounded rate and a **100.00%** mismatch rate across all efforts.
    * **Why?** The stable model lacks the cognitive capacity to satisfy structured JSON output rules while concurrently orchestrating multi-step external search tool execution, defaulting entirely to hallucinated parametric weights.
 
@@ -356,13 +371,14 @@ To evaluate whether GCP's **Priority PayGo** option (using the `X-Vertex-AI-LLM-
 
 ## 🏁 Overall Conclusion & Architectural Recommendations
 
-Through our latest evaluation—spanning **540 standard runs** comparing the stable and preview releases of `gemini-3.1-flash-lite`—we have mapped out the operational profiles of these lightweight models on grounded POI discovery tasks.
+Through our latest evaluation—spanning **1080 standard runs** across multiple Gemini models—we have mapped out the operational profiles of these models on grounded POI discovery tasks.
 
 ### 📌 Summary of Core Findings
 
-1. **Lightweight Model Grounding Revolution:** The `gemini-3.1-flash-lite-preview` model demonstrates a massive capability leap. It successfully resolves the cognitive load bottleneck of combining strict JSON Schema constraints with multi-step search grounding, achieving a **100.00% Grounded Rate** and a near-perfect **0.19% Mismatch Rate** (at high effort).
+1. **Lightweight Model Grounding Revolution:** The `gemini-3.1-flash-lite-preview` model represents a massive capability leap. It successfully resolves the cognitive load bottleneck of combining strict JSON Schema constraints with multi-step search grounding, achieving a **100.00% Grounded Rate** and an outstanding **0.83% Fuzzy Mismatch Rate** (at high effort).
 2. **Stable Version Limitations:** The stable `gemini-3.1-flash-lite` model remains unable to handle this combined task, failing to invoke search grounding entirely (**0.00% Grounded Rate**) and resulting in a **100.00% Mismatch Rate** due to purely hallucinated outputs.
-3. **Frugal High-Precision Grounding:** The preview model achieves these results with extremely low latency (**~5.3s - 5.8s**), representing a highly cost-effective and performant architecture for real-time grounded applications.
+3. **Frugal High-Precision Grounding:** The preview model achieves these high-precision results with extremely low latency (**~5.4s - 6.2s**), representing a highly cost-effective and performant architecture for real-time grounded applications.
+4. **Pro Model Latency Constraints:** While `gemini-3.1-pro-preview` achieves high grounding activation (99-100%) and very solid factual precision, its high average latency (**~19s - 38s**) makes it less suitable for real-time customer-facing interactions.
 
 ---
 
@@ -370,7 +386,9 @@ Through our latest evaluation—spanning **540 standard runs** comparing the sta
 
 | Model | Use Case | Recommended Architecture | Rationale |
 | :--- | :--- | :--- | :--- |
-| **`gemini-3.1-flash-lite-preview`** | **Real-Time Factual Grounding** | **1-Step Direct (With Schema)** | Delivers a perfect 100.00% grounding rate, near-zero mismatch (0.19% at high effort), and extremely fast latencies under 6s. |
+| **`gemini-3.1-flash-lite-preview`** | **Real-Time Factual Grounding** | **1-Step Direct (With Schema)** | **Highly Recommended.** Delivers a perfect 100.00% grounding rate, near-zero mismatch (0.83% at high effort), and extremely fast latencies under 6.2s. |
+| **`gemini-3.1-pro-preview`** | **Mission-Critical Accuracy (Back-Office)** | **1-Step Direct (With Schema)** | Delivers high grounding precision (~2% mismatch) and reliable tool activation, but has high latency (~19s - 38s). |
+| **`gemini-3.5-flash`** | **Not Recommended for Constrained 1-Step** | **None / Switch to Preview** | Highly prone to bypassing grounding search tools (~71-88% bypass rate) under JSON Schema constraints. |
 | **`gemini-3.1-flash-lite`** | **NOT RECOMMENDED** | **None / Switch to Preview** | Stable release is inherently prone to bypassing grounding lookups entirely, resulting in 100% mismatch rates. |
 
 
